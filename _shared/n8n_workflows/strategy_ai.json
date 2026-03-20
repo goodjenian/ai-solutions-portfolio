@@ -1,0 +1,149 @@
+{
+  "name": "GoodySEO — StrategyAI Gateway",
+  "nodes": [
+    {
+      "id": "n1-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "parameters": {
+        "path": "strategyai/run",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "n2-validate",
+      "name": "Validate Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || {};\nconst headers = $input.first().json.headers || {};\n\nconst apiKey = headers['x-api-key'] || headers['X-Api-Key'] || '';\nconst url = body.url || '';\nconst objective = body.objective || '';\n\nif (!apiKey) throw new Error('Missing X-Api-Key header');\nif (!url) throw new Error('Missing required field: url');\nif (!objective) throw new Error('Missing required field: objective');\n\nreturn [{ json: { apiKey, url, objective } }];"
+      }
+    },
+    {
+      "id": "n3-call-api",
+      "name": "Call StrategyAI API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8001/run",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "={{ $json.apiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.url }}"
+            },
+            {
+              "name": "objective",
+              "value": "={{ $json.objective }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 300000
+        }
+      }
+    },
+    {
+      "id": "n4-respond-ok",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 200],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              { "name": "Content-Type", "value": "application/json" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "n5-error-handler",
+      "name": "Handle Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 480],
+      "parameters": {
+        "jsCode": "const err = $input.first().json;\nconst message = err.message || err.error || 'Internal error';\nconst statusCode = err.statusCode || err.status || 500;\nreturn [{ json: { error: message, status: statusCode } }];"
+      }
+    },
+    {
+      "id": "n6-respond-error",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 480],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": "={{ $json.status }}",
+          "responseHeaders": {
+            "entries": [
+              { "name": "Content-Type", "value": "application/json" }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [{ "node": "Validate Payload", "type": "main", "index": 0 }]
+      ]
+    },
+    "Validate Payload": {
+      "main": [
+        [{ "node": "Call StrategyAI API", "type": "main", "index": 0 }]
+      ]
+    },
+    "Call StrategyAI API": {
+      "main": [
+        [{ "node": "Respond Success", "type": "main", "index": 0 }]
+      ],
+      "error": [
+        [{ "node": "Handle Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Handle Error": {
+      "main": [
+        [{ "node": "Respond Error", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": ["goodyseo", "marketing", "strategyai"]
+}

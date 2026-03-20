@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "goodyseo-security"
+version = "1.0.0"
+description = "Shared security layer for GoodySEO AI products"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+redis = ["redis>=5.0"]
+dev = ["uvicorn[standard]>=0.29", "httpx>=0.27", "pytest>=8.0", "pytest-asyncio"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["goodyseo_security*"]

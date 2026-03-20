@@ -1,0 +1,120 @@
+{
+  "name": "GoodySEO — InboxAI Gateway",
+  "nodes": [
+    {
+      "id": "n1-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "parameters": {
+        "path": "inboxai/run",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "n2-validate",
+      "name": "Validate Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || {};\nconst headers = $input.first().json.headers || {};\n\nconst apiKey = headers['x-api-key'] || headers['X-Api-Key'] || '';\nconst emailSnippet = body.email_snippet || '';\nconst context = body.context || '';\n\nif (!apiKey) throw new Error('Missing X-Api-Key header');\nif (!emailSnippet) throw new Error('Missing required field: email_snippet');\n\n// Safety guard: block obvious PII patterns\nconst piiPatterns = [\n  /\\b\\d{3}-\\d{2}-\\d{4}\\b/,  // SSN\n  /\\b\\d{16}\\b/,               // Credit card\n];\nfor (const pattern of piiPatterns) {\n  if (pattern.test(emailSnippet)) {\n    throw new Error('Potential PII detected. Do not submit sensitive financial or identity data.');\n  }\n}\n\n// Enforce max snippet length (2000 chars)\nconst truncated = emailSnippet.slice(0, 2000);\n\nreturn [{ json: { apiKey, email_snippet: truncated, context } }];"
+      }
+    },
+    {
+      "id": "n3-call-api",
+      "name": "Call InboxAI API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8003/run",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "X-Api-Key", "value": "={{ $json.apiKey }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "email_snippet", "value": "={{ $json.email_snippet }}" },
+            { "name": "context", "value": "={{ $json.context }}" }
+          ]
+        },
+        "options": { "timeout": 120000 }
+      }
+    },
+    {
+      "id": "n4-respond-ok",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 200],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [{ "name": "Content-Type", "value": "application/json" }]
+          }
+        }
+      }
+    },
+    {
+      "id": "n5-error-handler",
+      "name": "Handle Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 480],
+      "parameters": {
+        "jsCode": "const err = $input.first().json;\nconst message = err.message || err.error || 'Internal error';\nconst statusCode = err.statusCode || err.status || 500;\nreturn [{ json: { error: message, status: statusCode } }];"
+      }
+    },
+    {
+      "id": "n6-respond-error",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 480],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": "={{ $json.status }}",
+          "responseHeaders": {
+            "entries": [{ "name": "Content-Type", "value": "application/json" }]
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Validate Payload", "type": "main", "index": 0 }]]
+    },
+    "Validate Payload": {
+      "main": [[{ "node": "Call InboxAI API", "type": "main", "index": 0 }]]
+    },
+    "Call InboxAI API": {
+      "main": [[{ "node": "Respond Success", "type": "main", "index": 0 }]],
+      "error": [[{ "node": "Handle Error", "type": "main", "index": 0 }]]
+    },
+    "Handle Error": {
+      "main": [[{ "node": "Respond Error", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": ["goodyseo", "productivity", "inboxai"]
+}
