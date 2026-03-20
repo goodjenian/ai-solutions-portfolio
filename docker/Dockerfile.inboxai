@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install shared security package
 COPY _shared/ ./_shared/
-RUN pip install --no-cache-dir -e ./_shared/ "uvicorn[standard]>=0.29"
+RUN pip install --no-cache-dir -e "./_shared/[redis]" "uvicorn[standard]>=0.29" "langchain-openai>=0.1"
 
 # Install service
 COPY productivity/email_auto_responder_flow/ ./productivity/email_auto_responder_flow/

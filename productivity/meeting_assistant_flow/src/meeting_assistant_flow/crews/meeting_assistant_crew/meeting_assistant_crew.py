@@ -13,7 +13,7 @@ class MeetingAssistantCrew:
 
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
-    llm = ChatOpenAI(model="gpt-4")
+    llm = ChatOpenAI(model="gpt-4o-mini")
 
     @agent
     def meeting_analyzer(self) -> Agent:

@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install shared security package
 COPY _shared/ ./_shared/
-RUN pip install --no-cache-dir -e ./_shared/ "uvicorn[standard]>=0.29" "langchain-openai>=0.1"
+RUN pip install --no-cache-dir -e "./_shared/[redis]" "uvicorn[standard]>=0.29" "langchain-openai>=0.1"
 
 # Install service
 COPY productivity/meeting_assistant_flow/ ./productivity/meeting_assistant_flow/

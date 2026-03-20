@@ -66,7 +66,7 @@ async def process_meeting(
     start = time.perf_counter()
     try:
         # Write notes to temp file (flow reads from filesystem)
-        notes_path = Path(__file__).parent / "meeting_notes_runtime.txt"
+        notes_path = Path(__file__).parent / "meeting_notes.txt"
         notes_path.write_text(payload.meeting_notes, encoding="utf-8")
 
         from src.meeting_assistant_flow.main import MeetingFlow  # type: ignore[import]
@@ -97,7 +97,7 @@ async def process_meeting(
         raise HTTPException(500, detail=f"Flow error: {e}")
     finally:
         # Ensure cleanup even on error
-        cleanup = Path(__file__).parent / "meeting_notes_runtime.txt"
+        cleanup = Path(__file__).parent / "meeting_notes.txt"
         if cleanup.exists():
             cleanup.unlink()
 
