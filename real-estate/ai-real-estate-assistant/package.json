@@ -1,0 +1,70 @@
+{
+  "name": "ai-real-estate-assistant-monorepo",
+  "version": "4.0.0",
+  "description": "AI-powered assistant for real estate agencies with chat, search, and analytics",
+  "private": true,
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:api\"",
+    "dev:web": "cd apps/web && npm run dev",
+    "dev:api": "cd apps/api && python -m uvicorn api.main:app --reload --host 0.0.0.0 --port 8000",
+    "build": "npm run build:web",
+    "build:web": "cd apps/web && npm run build",
+    "test": "npm run test:api && npm run test:web",
+    "test:api": "cd apps/api && set PYTHONPATH=%CD% && python -m pytest",
+    "test:web": "cd apps/web && npm test",
+    "test:coverage": "cd apps/web && npm run test:coverage",
+    "test:e2e": "playwright test",
+    "lint": "npm run lint:api && npm run lint:web",
+    "lint:api": "cd apps/api && ruff check .",
+    "lint:web": "cd apps/web && npm run lint",
+    "format": "npm run format:api && npm run format:web",
+    "format:api": "cd apps/api && ruff format .",
+    "format:web": "cd apps/web && npm run lint -- --fix",
+    "ci:backend": "python scripts/ci/ci_parity.py",
+    "ci:frontend": "cd apps/web && npm ci && npm run lint && npm run test -- --ci --coverage",
+    "ci:full": "python scripts/ci/ci_full.py",
+    "prepare": "npx playwright install",
+    "screenshots": "node scripts/capture_screenshots.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://AleksNeStu@github.com/AleksNeStu/ai-real-estate-assistant.git"
+  },
+  "keywords": [
+    "real-estate",
+    "ai",
+    "assistant",
+    "fastapi",
+    "nextjs"
+  ],
+  "author": "Alex Nesterovich",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AleksNeStu/ai-real-estate-assistant/issues"
+  },
+  "homepage": "https://github.com/AleksNeStu/ai-real-estate-assistant#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^9.39.3",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.2"
+  },
+  "lint-staged": {
+    "apps/web/**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "npx eslint --fix --config apps/web/eslint.config.mjs"
+    ],
+    "apps/web/**/*.{css,scss,json,md}": [
+      "prettier --write"
+    ],
+    "apps/api/**/*.py": [
+      "ruff format --config=apps/api/pyproject.toml"
+    ]
+  }
+}

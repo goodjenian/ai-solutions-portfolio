@@ -1,0 +1,672 @@
+{
+  "common": {
+    "appName": "AI Estate",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "export": "Export",
+    "search": "Search",
+    "calculate": "Calculate",
+    "create": "Create",
+    "clear": "Clear",
+    "update": "Update",
+    "loading": "Loading...",
+    "searching": "Searching...",
+    "exporting": "Exporting...",
+    "saving": "Saving...",
+    "testing": "Testing...",
+    "error": "Error",
+    "success": "Success",
+    "toggleTheme": "Toggle theme",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "any": "Any",
+    "other": "Other",
+    "results": "Results",
+    "noResults": "No results",
+    "tryAgain": "Try again"
+  },
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "favorites": "Favorites",
+    "documents": "Documents",
+    "cities": "Cities",
+    "assistant": "Assistant",
+    "analytics": "Analytics",
+    "agents": "Find Agents",
+    "knowledge": "Knowledge",
+    "settings": "Settings",
+    "marketTrends": "Market Trends",
+    "savedSearches": "Saved Searches",
+    "tools": "Tools"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "profile": "Profile",
+    "settings": "Settings",
+    "user": "User",
+    "login": {
+      "title": "Welcome back",
+      "description": "Enter your email to sign in to your account",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Password",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "submit": "Sign In",
+      "signUp": "Sign up",
+      "orContinueWith": "Or continue with"
+    },
+    "register": {
+      "title": "Create an account",
+      "description": "Enter your details to get started",
+      "fullNameLabel": "Full Name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "haveAccount": "Already have an account?",
+      "submit": "Create Account"
+    },
+    "forgotPassword": {
+      "title": "Forgot password?",
+      "description": "Enter your email and we'll send you a reset link",
+      "emailLabel": "Email",
+      "submit": "Send Reset Link",
+      "backToLogin": "Back to login",
+      "checkEmail": "Check your email",
+      "resetSent": "We've sent a password reset link to your email address."
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "description": "Enter your new password",
+      "newPasswordLabel": "New Password",
+      "confirmPasswordLabel": "Confirm New Password",
+      "submit": "Reset Password",
+      "success": "Password reset successfully"
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "description": "We've sent a verification link to your email",
+      "checkInbox": "Please check your inbox and click the verification link.",
+      "resend": "Resend verification email",
+      "verified": "Email verified successfully"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "nameRequired": "Name is required",
+      "passwordMismatch": "Passwords do not match",
+      "weakPassword": "Password must be at least 8 characters",
+      "emailAlreadyExists": "An account with this email already exists",
+      "invalidEmail": "Please enter a valid email address"
+    }
+  },
+  "property": {
+    "card": {
+      "untitled": "Untitled Property",
+      "imagePlaceholder": "Property image",
+      "priceOnRequest": "Price on request",
+      "beds": "{count, plural, one {# bed} other {# beds}}",
+      "baths": "{count, plural, one {# bath} other {# baths}}",
+      "areaUnit": "m²",
+      "noLongerAvailable": "Property no longer available",
+      "locationUnavailable": "Location unavailable"
+    },
+    "favorite": {
+      "add": "Add to favorites",
+      "remove": "Remove from favorites"
+    },
+    "details": {
+      "title": "Property Details",
+      "price": "Price",
+      "area": "Area",
+      "rooms": "Rooms",
+      "bathrooms": "Bathrooms",
+      "floor": "Floor",
+      "totalFloors": "Total floors",
+      "yearBuilt": "Year built",
+      "propertyType": "Property type",
+      "heating": "Heating",
+      "parking": "Parking",
+      "description": "Description",
+      "location": "Location",
+      "features": "Features",
+      "contact": "Contact agent"
+    }
+  },
+  "search": {
+    "title": "Find Your Property",
+    "description": "Search across thousands of listings using AI-powered semantic search.",
+    "placeholder": "Describe what you're looking for...",
+    "filters": {
+      "title": "Filters",
+      "sortBy": "Sort By",
+      "order": "Order",
+      "minPrice": "Min Price",
+      "maxPrice": "Max Price",
+      "minRooms": "Minimum Rooms",
+      "propertyType": "Property Type",
+      "clearFilters": "Clear Filters",
+      "applyFilters": "Apply Filters"
+    },
+    "sortOptions": {
+      "relevance": "Relevance",
+      "price": "Price",
+      "pricePerSqm": "Price per m²",
+      "area": "Area (m²)",
+      "yearBuilt": "Year Built",
+      "dateAdded": "Date Added"
+    },
+    "orderOptions": {
+      "ascending": "Ascending",
+      "descending": "Descending"
+    },
+    "propertyTypes": {
+      "any": "Any",
+      "apartment": "Apartment",
+      "house": "House",
+      "studio": "Studio",
+      "loft": "Loft",
+      "townhouse": "Townhouse",
+      "other": "Other"
+    },
+    "emptyState": {
+      "title": "Start Your Property Search",
+      "description": "Enter a search query to explore thousands of property listings.",
+      "tryExamples": "Try these examples:"
+    },
+    "results": {
+      "noResults": "No Results Found",
+      "noResultsHint": "Try adjusting your search terms or filters.",
+      "showingResults": "Showing {count} {count, plural, one {property} other {properties}}",
+      "exportResults": "Export Results"
+    },
+    "export": {
+      "title": "Export Results",
+      "format": "Export Format",
+      "csv": "CSV",
+      "json": "JSON",
+      "export": "Export"
+    },
+    "saveSearch": {
+      "button": "Save Search",
+      "title": "Save Search",
+      "nameLabel": "Search Name",
+      "namePlaceholder": "e.g., 2-bedroom apartments in Warsaw",
+      "success": "Search saved successfully!",
+      "error": "Failed to save search"
+    },
+    "errors": {
+      "searchFailed": "Search Failed",
+      "connectionFailed": "Connection failed. Please try again.",
+      "timeout": "Search timed out. Please try again."
+    }
+  },
+  "mortgage": {
+    "title": "Mortgage Calculator",
+    "description": "Estimate your monthly payments and total costs.",
+    "propertyPrice": "Property Price",
+    "downPayment": "Down Payment",
+    "downPaymentPercent": "Down Payment (%)",
+    "interestRate": "Interest Rate (%)",
+    "loanTerm": "Loan Term (Years)",
+    "calculate": "Calculate",
+    "results": {
+      "title": "Mortgage Results",
+      "monthlyPayment": "Monthly Payment",
+      "totalInterest": "Total Interest",
+      "totalCost": "Total Cost",
+      "loanAmount": "Loan Amount",
+      "downPaymentAmount": "Down Payment Amount"
+    },
+    "tco": {
+      "title": "Total Cost of Ownership",
+      "monthlyTco": "Monthly TCO",
+      "annualTco": "Annual TCO",
+      "maintenance": "Maintenance",
+      "maintenanceHint": "Common rule: 1-2% of property value per year",
+      "propertyTax": "Property Tax",
+      "insurance": "Insurance",
+      "utilities": "Utilities"
+    }
+  },
+  "investment": {
+    "title": "Investment Property Analyzer",
+    "description": "Analyze the potential return on investment for a property.",
+    "purchasePrice": "Purchase Price",
+    "monthlyRent": "Monthly Rent",
+    "operatingExpenses": "Operating Expenses",
+    "vacancyRate": "Vacancy Rate (%)",
+    "appreciationRate": "Appreciation Rate (%)",
+    "analyze": "Analyze",
+    "results": {
+      "title": "Investment Analysis",
+      "capRate": "Cap Rate",
+      "cashOnCash": "Cash on Cash Return",
+      "netOperatingIncome": "Net Operating Income",
+      "cashFlow": "Monthly Cash Flow",
+      "roi": "ROI (1 Year)",
+      "onePercentRule": "1% Rule",
+      "onePercentRulePass": "Pass - Rent is ≥ 1% of price",
+      "onePercentRuleFail": "Fail - Rent is < 1% of price"
+    },
+    "advanced": {
+      "title": "Advanced Investment Analysis",
+      "holdingPeriod": "Holding Period (Years)",
+      "sellingCosts": "Selling Costs (%)",
+      "incomeGrowth": "Income Growth (%)",
+      "expenseGrowth": "Expense Growth (%)"
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio Analyzer",
+    "description": "Analyze multiple properties as a portfolio.",
+    "addProperty": "Add Property",
+    "removeProperty": "Remove",
+    "emptyPortfolio": "No properties in portfolio",
+    "totals": {
+      "title": "Portfolio Totals",
+      "totalValue": "Total Value",
+      "totalRent": "Total Monthly Rent",
+      "averageCapRate": "Average Cap Rate",
+      "totalCashFlow": "Total Monthly Cash Flow"
+    }
+  },
+  "neighborhood": {
+    "title": "Neighborhood Insights",
+    "score": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor",
+      "veryPoor": "Very Poor"
+    },
+    "components": {
+      "safety": "Safety",
+      "schools": "Schools",
+      "amenities": "Amenities",
+      "walkability": "Walkability",
+      "greenSpace": "Green Space",
+      "publicTransport": "Public Transport",
+      "restaurants": "Restaurants",
+      "shopping": "Shopping"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences.",
+    "tabs": {
+      "identity": "Identity",
+      "notifications": "Notifications",
+      "models": "Models"
+    },
+    "identity": {
+      "title": "Identity",
+      "description": "Set the email address used to scope settings to your account.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "save": "Save",
+      "saved": "Email saved.",
+      "cleared": "Email cleared.",
+      "invalidEmail": "Please enter a valid email address."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Configure how you receive notifications.",
+      "emailNotifications": "Email Notifications",
+      "pushNotifications": "Push Notifications",
+      "savedSearchAlerts": "Saved Search Alerts",
+      "priceDropAlerts": "Price Drop Alerts",
+      "newListingAlerts": "New Listing Alerts"
+    },
+    "models": {
+      "title": "Models",
+      "description": "Select your default model and compare pricing.",
+      "defaultModel": "Default Model",
+      "refreshCatalog": "Refresh Catalog",
+      "runtimeCheck": "Runtime check",
+      "testConnection": "Test Connection",
+      "connectionSuccess": "Connection successful",
+      "connectionFailed": "Connection failed",
+      "noModels": "No models available",
+      "pricing": {
+        "title": "Model Pricing",
+        "input": "Input",
+        "output": "Output",
+        "per1kTokens": "per 1K tokens"
+      }
+    },
+    "saved": "Settings saved successfully.",
+    "error": "Failed to save settings."
+  },
+  "chat": {
+    "title": "AI Assistant",
+    "description": "Ask questions about properties, neighborhoods, and market trends.",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "emptyState": {
+      "title": "Start a Conversation",
+      "description": "Ask me anything about real estate.",
+      "suggestions": "Try asking:"
+    },
+    "suggestions": {
+      "properties": "What properties are available in Warsaw?",
+      "neighborhood": "Tell me about the Mokotów district",
+      "mortgage": "How much would a mortgage be for 500,000 PLN?",
+      "investment": "Is this a good investment property?"
+    },
+    "errors": {
+      "failed": "Failed to send message",
+      "timeout": "Request timed out"
+    }
+  },
+  "favorites": {
+    "title": "My Favorites",
+    "description": "Properties you've saved for later.",
+    "emptyState": {
+      "title": "No favorites yet",
+      "description": "Start browsing and save properties you like.",
+      "browseButton": "Browse Properties"
+    },
+    "collections": {
+      "title": "Collections",
+      "newCollection": "New Collection",
+      "collectionName": "Collection Name",
+      "create": "Create",
+      "delete": "Delete Collection"
+    }
+  },
+  "savedSearches": {
+    "title": "Saved Searches",
+    "description": "Your saved search queries.",
+    "emptyState": {
+      "title": "No saved searches",
+      "description": "Save searches to get notified about new listings."
+    },
+    "run": "Run Search",
+    "delete": "Delete",
+    "edit": "Edit",
+    "alerts": {
+      "enabled": "Alerts enabled",
+      "disabled": "Alerts disabled",
+      "enable": "Enable alerts",
+      "disable": "Disable alerts"
+    }
+  },
+  "marketTrends": {
+    "title": "Market Trends",
+    "description": "Analyze real estate market trends and statistics.",
+    "priceTrends": "Price Trends",
+    "volumeTrends": "Sales Volume",
+    "byPropertyType": "By Property Type",
+    "byLocation": "By Location",
+    "period": {
+      "month": "Last Month",
+      "quarter": "Last Quarter",
+      "year": "Last Year",
+      "all": "All Time"
+    }
+  },
+  "cityOverview": {
+    "title": "City Overview",
+    "description": "Compare neighborhoods and property prices across cities.",
+    "selectCity": "Select a city",
+    "averagePrice": "Average Price",
+    "pricePerSqm": "Price per m²",
+    "inventory": "Active Listings",
+    "neighborhoods": "Neighborhoods"
+  },
+  "knowledge": {
+    "title": "Knowledge Base",
+    "description": "Learn about real estate concepts and terminology.",
+    "searchPlaceholder": "Search articles...",
+    "categories": {
+      "buying": "Buying Guide",
+      "selling": "Selling Guide",
+      "mortgages": "Mortgages",
+      "investing": "Investment",
+      "legal": "Legal"
+    },
+    "noArticles": "No articles found"
+  },
+  "tools": {
+    "title": "Tools",
+    "description": "Useful calculators and utilities for real estate.",
+    "mortgageCalculator": "Mortgage Calculator",
+    "investmentAnalyzer": "Investment Analyzer",
+    "affordabilityCalculator": "Affordability Calculator",
+    "comparisonTool": "Property Comparison"
+  },
+  "admin": {
+    "dataSources": {
+      "title": "Data Sources",
+      "description": "Manage external data sources and integrations.",
+      "status": {
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "error": "Error"
+      },
+      "lastSync": "Last Sync",
+      "syncNow": "Sync Now",
+      "configure": "Configure"
+    }
+  },
+  "home": {
+    "title": "AI Real Estate Assistant",
+    "subtitle": "Intelligent property search, market analytics, and investment insights powered by advanced AI.",
+    "startSearching": "Start Searching",
+    "askAssistant": "Ask Assistant",
+    "features": {
+      "search": {
+        "title": "Smart Search",
+        "description": "Find properties using natural language queries"
+      },
+      "analytics": {
+        "title": "Market Analytics",
+        "description": "Track trends and analyze market data"
+      },
+      "assistant": {
+        "title": "AI Assistant",
+        "description": "Get personalized recommendations"
+      },
+      "investment": {
+        "title": "Investment Tools",
+        "description": "Analyze ROI and mortgage options"
+      }
+    }
+  },
+  "language": {
+    "switch": "Change language",
+    "current": "Current language: {language}",
+    "pl": "Polish",
+    "en": "English",
+    "ru": "Russian"
+  },
+  "error": {
+    "generic": "Something went wrong",
+    "notFound": "Page not found",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "serverError": "Server error",
+    "tryAgain": "Please try again later",
+    "goHome": "Go to homepage"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Minimum {min} characters required",
+    "maxLength": "Maximum {max} characters allowed",
+    "min": "Minimum value is {min}",
+    "max": "Maximum value is {max}",
+    "pattern": "Invalid format"
+  },
+  "agents": {
+    "title": "Find an Agent",
+    "subtitle": "Connect with professional real estate agents",
+    "noAgents": "No agents found",
+    "noAgentsDescription": "Try adjusting your filters or search criteria",
+    "verified": "Verified",
+    "rating": "{rating} rating",
+    "reviews": "{count} reviews",
+    "sales": "{count} sales",
+    "rentals": "{count} rentals",
+    "specialties": "Specialties",
+    "serviceAreas": "Service Areas",
+    "languages": "Languages",
+    "contact": "Contact Agent",
+    "scheduleViewing": "Schedule Viewing",
+    "viewProfile": "View Profile",
+    "filters": {
+      "title": "Filters",
+      "city": "City",
+      "specialty": "Specialty",
+      "minRating": "Minimum Rating",
+      "sortBy": "Sort By",
+      "rating": "Rating",
+      "listings": "Number of Listings",
+      "reviews": "Number of Reviews",
+      "clear": "Clear Filters"
+    },
+    "profile": {
+      "title": "Agent Profile",
+      "about": "About",
+      "listings": "Active Listings",
+      "contactInfo": "Contact Information",
+      "office": "Office",
+      "phone": "Phone",
+      "email": "Email",
+      "license": "License",
+      "agency": "Agency",
+      "noListings": "No active listings"
+    },
+    "contactForm": {
+      "title": "Contact {name}",
+      "name": "Your Name",
+      "email": "Your Email",
+      "phone": "Your Phone",
+      "inquiryType": "Inquiry Type",
+      "general": "General Inquiry",
+      "property": "Property Inquiry",
+      "financing": "Financing Options",
+      "viewing": "Schedule Viewing",
+      "message": "Message",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "submit": "Send Message",
+      "success": "Message sent successfully!",
+      "successDescription": "The agent will get back to you soon."
+    },
+    "viewingForm": {
+      "title": "Schedule a Viewing",
+      "selectDate": "Select Date",
+      "selectTime": "Select Time",
+      "duration": "Duration (minutes)",
+      "notes": "Notes",
+      "notesPlaceholder": "Any special requests or questions?",
+      "submit": "Request Viewing",
+      "success": "Viewing request sent!",
+      "successDescription": "The agent will confirm your appointment soon."
+    },
+    "inquiries": {
+      "title": "Inquiries",
+      "noInquiries": "No inquiries yet",
+      "status": {
+        "new": "New",
+        "read": "Read",
+        "responded": "Responded",
+        "closed": "Closed"
+      }
+    },
+    "appointments": {
+      "title": "Appointments",
+      "noAppointments": "No appointments scheduled",
+      "status": {
+        "requested": "Requested",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      }
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "description": "Manage your property documents, contracts, and reports",
+    "uploadButton": "Upload Document",
+    "refresh": "Refresh",
+    "emptyState": {
+      "title": "No documents yet",
+      "description": "Upload your first document to start organizing your property-related files.",
+      "uploadFirst": "Upload Your First Document"
+    },
+    "upload": {
+      "title": "Upload Document",
+      "dragDrop": "Drag & drop a file here",
+      "orClick": "or click to browse",
+      "supportedTypes": "Supports: PDF, DOC, DOCX, JPG, PNG (max 10MB)",
+      "category": "Category",
+      "categoryPlaceholder": "Select category (optional)",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional description...",
+      "tags": "Tags",
+      "tagsPlaceholder": "contract, urgent, reviewed (comma-separated)",
+      "expiryDate": "Expiry Date",
+      "uploadButton": "Upload Document",
+      "uploading": "Uploading...",
+      "success": "Upload Successful!",
+      "cancel": "Cancel"
+    },
+    "categories": {
+      "selectCategory": "Select category (optional)",
+      "contract": "Contract",
+      "inspection": "Inspection Report",
+      "photo": "Photo",
+      "financial": "Financial Document",
+      "other": "Other",
+      "allCategories": "All Categories"
+    },
+    "list": {
+      "searchPlaceholder": "Search documents...",
+      "sortByDate": "Sort by Date",
+      "sortByName": "Sort by Name",
+      "sortBySize": "Sort by Size",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "noResults": "No documents match your filters",
+      "download": "Download",
+      "delete": "Delete",
+      "deleteConfirm": "Delete \"{name}\"? This cannot be undone.",
+      "deleting": "Deleting...",
+      "loadMore": "Load More ({page}/{total})",
+      "loading": "Loading...",
+      "expired": "Expired",
+      "expiringSoon": "Expiring Soon",
+      "expires": "Expires",
+      "added": "Added"
+    },
+    "errors": {
+      "loadFailed": "Failed to Load Documents",
+      "deleteFailed": "Failed to delete document",
+      "invalidType": "Invalid file type",
+      "tooLarge": "File too large. Maximum size: 10MB",
+      "uploadFailed": "Upload failed"
+    },
+    "expiryAlert": {
+      "singular": "{count} document expiring soon",
+      "plural": "{count} documents expiring soon",
+      "description": "The following documents will expire within 30 days:"
+    }
+  }
+}

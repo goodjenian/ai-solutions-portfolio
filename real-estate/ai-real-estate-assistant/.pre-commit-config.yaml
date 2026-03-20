@@ -1,0 +1,58 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        args: [--unsafe]
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: check-illegal-windows-names
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.13
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix]
+        types_or: [python, pyi]
+      - id: ruff-format
+        types_or: [python, pyi]
+
+  # Gitleaks - Secret scanning (API keys, passwords, tokens)
+  # Install: scoop install gitleaks (Windows) or brew install gitleaks (macOS)
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.0
+    hooks:
+      - id: gitleaks
+        args: [--config, .gitleaks.toml]
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+
+  # Semgrep - SAST (Static Application Security Testing)
+  # NOTE: Disabled on Windows due to Python module path issues.
+  # To enable: Use Docker (via dev container) or install with: pip install semgrep
+  # For CI/CD (GitHub Actions), Semgrep runs fine in the Linux environment.
+  # - repo: local
+  #   hooks:
+  #     - id: semgrep
+  #       name: semgrep (SAST)
+  #       entry: semgrep
+  #       args: [--config, auto, --config, semgrep.yml, --error, --severity, ERROR]
+  #       language: system
+  #       types: [python]
+  #       pass_filenames: true
+
+  # Lint-staged - Run linting on staged frontend files only
+  # Requires package.json with lint-staged configuration
+  - repo: local
+    hooks:
+      - id: lint-staged-frontend
+        name: lint-staged (frontend)
+        entry: npx lint-staged
+        language: system
+        pass_filenames: false

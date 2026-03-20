@@ -1,0 +1,516 @@
+{
+  "common": {
+    "appName": "AI Estate",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "submit": "Отправить",
+    "retry": "Повторить",
+    "refresh": "Обновить",
+    "export": "Экспорт",
+    "search": "Поиск",
+    "calculate": "Рассчитать",
+    "create": "Создать",
+    "clear": "Очистить",
+    "update": "Обновить",
+    "loading": "Загрузка...",
+    "searching": "Поиск...",
+    "exporting": "Экспорт...",
+    "saving": "Сохранение...",
+    "testing": "Тестирование...",
+    "error": "Ошибка",
+    "success": "Успешно",
+    "toggleTheme": "Сменить тему",
+    "close": "Закрыть",
+    "back": "Назад",
+    "next": "Далее",
+    "previous": "Назад",
+    "yes": "Да",
+    "no": "Нет",
+    "all": "Все",
+    "none": "Нет",
+    "any": "Любой",
+    "other": "Другое",
+    "results": "Результаты",
+    "noResults": "Нет результатов",
+    "tryAgain": "Попробуйте снова"
+  },
+  "nav": {
+    "home": "Главная",
+    "search": "Поиск",
+    "favorites": "Избранное",
+    "documents": "Документы",
+    "cities": "Города",
+    "assistant": "Ассистент",
+    "analytics": "Аналитика",
+    "agents": "Найти агентов",
+    "knowledge": "База знаний",
+    "settings": "Настройки",
+    "marketTrends": "Тренды рынка",
+    "savedSearches": "Сохранённые поиски",
+    "tools": "Инструменты"
+  },
+  "auth": {
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "signOut": "Выйти",
+    "profile": "Профиль",
+    "settings": "Настройки",
+    "user": "Пользователь",
+    "login": {
+      "title": "С возвращением",
+      "description": "Введите email для входа в аккаунт",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Пароль",
+      "forgotPassword": "Забыли пароль?",
+      "noAccount": "Нет аккаунта?",
+      "submit": "Войти",
+      "orContinueWith": "Или продолжить через"
+    },
+    "register": {
+      "title": "Создать аккаунт",
+      "description": "Введите данные для регистрации",
+      "fullNameLabel": "Полное имя",
+      "emailLabel": "Email",
+      "passwordLabel": "Пароль",
+      "confirmPasswordLabel": "Подтвердите пароль",
+      "haveAccount": "Уже есть аккаунт?",
+      "submit": "Создать аккаунт"
+    },
+    "forgotPassword": {
+      "title": "Забыли пароль?",
+      "description": "Введите email и мы отправим ссылку для сброса",
+      "emailLabel": "Email",
+      "submit": "Отправить ссылку",
+      "backToLogin": "Вернуться к входу",
+      "checkEmail": "Проверьте почту",
+      "resetSent": "Мы отправили ссылку для сброса пароля на ваш email."
+    },
+    "resetPassword": {
+      "title": "Сбросить пароль",
+      "description": "Введите новый пароль",
+      "newPasswordLabel": "Новый пароль",
+      "confirmPasswordLabel": "Подтвердите пароль",
+      "submit": "Сбросить пароль",
+      "success": "Пароль успешно сброшен"
+    },
+    "verifyEmail": {
+      "title": "Подтвердите email",
+      "description": "Мы отправили ссылку подтверждения на ваш email",
+      "checkInbox": "Проверьте почту и нажмите на ссылку подтверждения.",
+      "resend": "Отправить повторно",
+      "verified": "Email подтверждён"
+    },
+    "errors": {
+      "invalidCredentials": "Неверный email или пароль",
+      "emailRequired": "Email обязателен",
+      "passwordRequired": "Пароль обязателен",
+      "nameRequired": "Имя обязательно",
+      "passwordMismatch": "Пароли не совпадают",
+      "weakPassword": "Пароль должен содержать минимум 8 символов",
+      "emailAlreadyExists": "Аккаунт с таким email уже существует",
+      "invalidEmail": "Введите корректный email"
+    }
+  },
+  "property": {
+    "card": {
+      "untitled": "Объект без названия",
+      "imagePlaceholder": "Фото объекта",
+      "priceOnRequest": "Цена по запросу",
+      "beds": "{count, plural, one {# комната} few {# комнаты} other {# комнат}}",
+      "baths": "{count, plural, one {# ванная} few {# ванные} other {# ванных}}",
+      "areaUnit": "м²",
+      "noLongerAvailable": "Объект больше недоступен",
+      "locationUnavailable": "Местоположение недоступно"
+    },
+    "favorite": {
+      "add": "Добавить в избранное",
+      "remove": "Удалить из избранного"
+    },
+    "details": {
+      "title": "Детали объекта",
+      "price": "Цена",
+      "area": "Площадь",
+      "rooms": "Комнаты",
+      "bathrooms": "Ванные",
+      "floor": "Этаж",
+      "totalFloors": "Этажность",
+      "yearBuilt": "Год постройки",
+      "propertyType": "Тип недвижимости",
+      "heating": "Отопление",
+      "parking": "Парковка",
+      "description": "Описание",
+      "location": "Местоположение",
+      "features": "Характеристики",
+      "contact": "Связаться с агентом"
+    }
+  },
+  "search": {
+    "title": "Найдите свою недвижимость",
+    "description": "Поиск по тысячам объявлений с помощью семантического AI-поиска.",
+    "placeholder": "Опишите что вы ищете...",
+    "filters": {
+      "title": "Фильтры",
+      "sortBy": "Сортировать по",
+      "order": "Порядок",
+      "minPrice": "Мин. цена",
+      "maxPrice": "Макс. цена",
+      "minRooms": "Мин. комнат",
+      "propertyType": "Тип недвижимости",
+      "clearFilters": "Сбросить фильтры",
+      "applyFilters": "Применить"
+    },
+    "sortOptions": {
+      "relevance": "Релевантность",
+      "price": "Цена",
+      "pricePerSqm": "Цена за м²",
+      "area": "Площадь (м²)",
+      "yearBuilt": "Год постройки",
+      "dateAdded": "Дата добавления"
+    },
+    "orderOptions": {
+      "ascending": "По возрастанию",
+      "descending": "По убыванию"
+    },
+    "propertyTypes": {
+      "any": "Любой",
+      "apartment": "Квартира",
+      "house": "Дом",
+      "studio": "Студия",
+      "loft": "Лофт",
+      "townhouse": "Таунхаус",
+      "other": "Другое"
+    },
+    "emptyState": {
+      "title": "Начните поиск недвижимости",
+      "description": "Введите запрос для поиска тысяч объявлений.",
+      "tryExamples": "Попробуйте примеры:"
+    },
+    "results": {
+      "noResults": "Результаты не найдены",
+      "noResultsHint": "Попробуйте изменить условия поиска.",
+      "showingResults": "Найдено {count} {count, plural, one {объект} few {объекта} other {объектов}}",
+      "exportResults": "Экспорт результатов"
+    },
+    "export": {
+      "title": "Экспорт результатов",
+      "format": "Формат экспорта",
+      "csv": "CSV",
+      "json": "JSON",
+      "export": "Экспорт"
+    },
+    "saveSearch": {
+      "button": "Сохранить поиск",
+      "title": "Сохранить поиск",
+      "nameLabel": "Название поиска",
+      "namePlaceholder": "напр. 2-комнатные квартиры в Варшаве",
+      "success": "Поиск сохранён!",
+      "error": "Не удалось сохранить поиск"
+    },
+    "errors": {
+      "searchFailed": "Поиск не удался",
+      "connectionFailed": "Ошибка соединения. Попробуйте снова.",
+      "timeout": "Время поиска истекло. Попробуйте снова."
+    }
+  },
+  "mortgage": {
+    "title": "Ипотечный калькулятор",
+    "description": "Рассчитайте ежемесячный платёж и общую стоимость.",
+    "propertyPrice": "Стоимость недвижимости",
+    "downPayment": "Первоначальный взнос",
+    "downPaymentPercent": "Первоначальный взнос (%)",
+    "interestRate": "Процентная ставка (%)",
+    "loanTerm": "Срок кредита (лет)",
+    "calculate": "Рассчитать",
+    "results": {
+      "title": "Результаты расчёта",
+      "monthlyPayment": "Ежемесячный платёж",
+      "totalInterest": "Общие проценты",
+      "totalCost": "Общая стоимость",
+      "loanAmount": "Сумма кредита",
+      "downPaymentAmount": "Первоначальный взнос"
+    },
+    "tco": {
+      "title": "Полная стоимость владения",
+      "monthlyTco": "Ежемесячные расходы",
+      "annualTco": "Годовые расходы",
+      "maintenance": "Обслуживание",
+      "maintenanceHint": "Правило: 1-2% стоимости недвижимости в год",
+      "propertyTax": "Налог на недвижимость",
+      "insurance": "Страхование",
+      "utilities": "Коммунальные услуги"
+    }
+  },
+  "investment": {
+    "title": "Анализ инвестиций в недвижимость",
+    "description": "Оцените потенциальную доходность инвестиций.",
+    "purchasePrice": "Цена покупки",
+    "monthlyRent": "Месячная аренда",
+    "operatingExpenses": "Операционные расходы",
+    "vacancyRate": "Уровень вакантности (%)",
+    "appreciationRate": "Рост стоимости (%)",
+    "analyze": "Анализировать",
+    "results": {
+      "title": "Анализ инвестиций",
+      "capRate": "Капитализация",
+      "cashOnCash": "Cash on Cash",
+      "netOperatingIncome": "Чистый операционный доход",
+      "cashFlow": "Месячный денежный поток",
+      "roi": "ROI (1 год)",
+      "onePercentRule": "Правило 1%",
+      "onePercentRulePass": "Пройдено - Аренда ≥ 1% цены",
+      "onePercentRuleFail": "Не пройдено - Аренда < 1% цены"
+    },
+    "advanced": {
+      "title": "Расширенный анализ инвестиций",
+      "holdingPeriod": "Период владения (лет)",
+      "sellingCosts": "Расходы на продажу (%)",
+      "incomeGrowth": "Рост дохода (%)",
+      "expenseGrowth": "Рост расходов (%)"
+    }
+  },
+  "portfolio": {
+    "title": "Анализ портфеля",
+    "description": "Анализ нескольких объектов как портфеля.",
+    "addProperty": "Добавить объект",
+    "removeProperty": "Удалить",
+    "emptyPortfolio": "Нет объектов в портфеле",
+    "totals": {
+      "title": "Итого по портфелю",
+      "totalValue": "Общая стоимость",
+      "totalRent": "Общая аренда/мес",
+      "averageCapRate": "Средняя капитализация",
+      "totalCashFlow": "Общий денежный поток/мес"
+    }
+  },
+  "neighborhood": {
+    "title": "Информация о районе",
+    "score": {
+      "excellent": "Отлично",
+      "good": "Хорошо",
+      "fair": "Удовлетворительно",
+      "poor": "Плохо",
+      "veryPoor": "Очень плохо"
+    },
+    "components": {
+      "safety": "Безопасность",
+      "schools": "Школы",
+      "amenities": "Удобства",
+      "walkability": "Пешеходная доступность",
+      "greenSpace": "Зелёные зоны",
+      "publicTransport": "Общественный транспорт",
+      "restaurants": "Рестораны",
+      "shopping": "Магазины"
+    }
+  },
+  "settings": {
+    "title": "Настройки",
+    "description": "Управление настройками аккаунта и предпочтениями.",
+    "tabs": {
+      "identity": "Профиль",
+      "notifications": "Уведомления",
+      "models": "Модели"
+    },
+    "identity": {
+      "title": "Профиль",
+      "description": "Установите email для привязки настроек к аккаунту.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Введите email",
+      "save": "Сохранить",
+      "saved": "Email сохранён.",
+      "cleared": "Email удалён.",
+      "invalidEmail": "Введите корректный email."
+    },
+    "notifications": {
+      "title": "Уведомления",
+      "description": "Настройте способ получения уведомлений.",
+      "emailNotifications": "Email уведомления",
+      "pushNotifications": "Push-уведомления",
+      "savedSearchAlerts": "Уведомления о поиске",
+      "priceDropAlerts": "Уведомления о снижении цен",
+      "newListingAlerts": "Уведомления о новых объявлениях"
+    },
+    "models": {
+      "title": "Модели",
+      "description": "Выберите модель по умолчанию и сравните цены.",
+      "defaultModel": "Модель по умолчанию",
+      "refreshCatalog": "Обновить каталог",
+      "runtimeCheck": "Проверка runtime",
+      "testConnection": "Тест соединения",
+      "connectionSuccess": "Соединение успешно",
+      "connectionFailed": "Ошибка соединения",
+      "noModels": "Нет доступных моделей",
+      "pricing": {
+        "title": "Цены моделей",
+        "input": "Ввод",
+        "output": "Вывод",
+        "per1kTokens": "за 1K токенов"
+      }
+    },
+    "saved": "Настройки сохранены.",
+    "error": "Не удалось сохранить настройки."
+  },
+  "chat": {
+    "title": "AI Ассистент",
+    "description": "Задавайте вопросы о недвижимости, районах и рыночных трендах.",
+    "placeholder": "Введите сообщение...",
+    "send": "Отправить",
+    "emptyState": {
+      "title": "Начните разговор",
+      "description": "Спросите меня о чём угодно касательно недвижимости.",
+      "suggestions": "Попробуйте спросить:"
+    },
+    "suggestions": {
+      "properties": "Какая недвижимость доступна в Варшаве?",
+      "neighborhood": "Расскажи о районе Мокотув",
+      "mortgage": "Какой будет платёж по ипотеке на 500 000 zł?",
+      "investment": "Является ли это хорошей инвестицией?"
+    },
+    "errors": {
+      "failed": "Не удалось отправить сообщение",
+      "timeout": "Время запроса истекло"
+    }
+  },
+  "favorites": {
+    "title": "Моё избранное",
+    "description": "Сохранённая недвижимость.",
+    "emptyState": {
+      "title": "Нет избранных объектов",
+      "description": "Начните просмотр и сохраняйте понравившиеся объекты.",
+      "browseButton": "Просмотреть недвижимость"
+    },
+    "collections": {
+      "title": "Коллекции",
+      "newCollection": "Новая коллекция",
+      "collectionName": "Название коллекции",
+      "create": "Создать",
+      "delete": "Удалить коллекцию"
+    }
+  },
+  "savedSearches": {
+    "title": "Сохранённые поиски",
+    "description": "Ваши сохранённые поисковые запросы.",
+    "emptyState": {
+      "title": "Нет сохранённых поисков",
+      "description": "Сохраняйте поиски для уведомлений о новых объявлениях."
+    },
+    "run": "Выполнить поиск",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "alerts": {
+      "enabled": "Уведомления включены",
+      "disabled": "Уведомления выключены",
+      "enable": "Включить уведомления",
+      "disable": "Выключить уведомления"
+    }
+  },
+  "marketTrends": {
+    "title": "Тренды рынка",
+    "description": "Анализ тенденций и статистики рынка недвижимости.",
+    "priceTrends": "Ценовые тренды",
+    "volumeTrends": "Объём продаж",
+    "byPropertyType": "По типу недвижимости",
+    "byLocation": "По местоположению",
+    "period": {
+      "month": "Последний месяц",
+      "quarter": "Последний квартал",
+      "year": "Последний год",
+      "all": "Всё время"
+    }
+  },
+  "cityOverview": {
+    "title": "Обзор городов",
+    "description": "Сравнение районов и цен на недвижимость по городам.",
+    "selectCity": "Выберите город",
+    "averagePrice": "Средняя цена",
+    "pricePerSqm": "Цена за м²",
+    "inventory": "Активные объявления",
+    "neighborhoods": "Районы"
+  },
+  "knowledge": {
+    "title": "База знаний",
+    "description": "Изучите понятия и терминологию недвижимости.",
+    "searchPlaceholder": "Поиск статей...",
+    "categories": {
+      "buying": "Руководство покупателя",
+      "selling": "Руководство продавца",
+      "mortgages": "Ипотека",
+      "investing": "Инвестиции",
+      "legal": "Правовые вопросы"
+    },
+    "noArticles": "Статьи не найдены"
+  },
+  "tools": {
+    "title": "Инструменты",
+    "description": "Полезные калькуляторы и утилиты для недвижимости.",
+    "mortgageCalculator": "Ипотечный калькулятор",
+    "investmentAnalyzer": "Анализ инвестиций",
+    "affordabilityCalculator": "Калькулятор доступности",
+    "comparisonTool": "Сравнение объектов"
+  },
+  "admin": {
+    "dataSources": {
+      "title": "Источники данных",
+      "description": "Управление внешними источниками данных и интеграциями.",
+      "status": {
+        "connected": "Подключено",
+        "disconnected": "Отключено",
+        "error": "Ошибка"
+      },
+      "lastSync": "Последняя синхронизация",
+      "syncNow": "Синхронизировать",
+      "configure": "Настроить"
+    }
+  },
+  "home": {
+    "title": "AI Ассистент по Недвижимости",
+    "subtitle": "Интеллектуальный поиск недвижимости, рыночная аналитика и инвестиционные инсайты на базе продвинутого AI.",
+    "startSearching": "Начать поиск",
+    "askAssistant": "Спросить ассистента",
+    "features": {
+      "search": {
+        "title": "Умный поиск",
+        "description": "Находите недвижимость с помощью запросов на естественном языке"
+      },
+      "analytics": {
+        "title": "Рыночная аналитика",
+        "description": "Отслеживайте тренды и анализируйте рыночные данные"
+      },
+      "assistant": {
+        "title": "AI Ассистент",
+        "description": "Получайте персонализированные рекомендации"
+      },
+      "investment": {
+        "title": "Инвестиционные инструменты",
+        "description": "Анализируйте ROI и ипотечные опции"
+      }
+    }
+  },
+  "language": {
+    "switch": "Сменить язык",
+    "current": "Текущий язык: {language}",
+    "pl": "Польский",
+    "en": "Английский",
+    "ru": "Русский"
+  },
+  "error": {
+    "generic": "Что-то пошло не так",
+    "notFound": "Страница не найдена",
+    "unauthorized": "Нет авторизации",
+    "forbidden": "Доступ запрещён",
+    "serverError": "Ошибка сервера",
+    "tryAgain": "Попробуйте позже",
+    "goHome": "На главную"
+  },
+  "validation": {
+    "required": "Это поле обязательно",
+    "email": "Введите корректный email",
+    "minLength": "Минимум {min} символов",
+    "maxLength": "Максимум {max} символов",
+    "min": "Минимальное значение {min}",
+    "max": "Максимальное значение {max}",
+    "pattern": "Неверный формат"
+  }
+}

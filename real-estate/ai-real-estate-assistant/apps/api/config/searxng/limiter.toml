@@ -1,0 +1,25 @@
+[botdetection]
+trusted_proxies = [
+  '127.0.0.0/8',
+  '::1',
+  '192.168.0.0/16',
+  '172.16.0.0/12',
+  '10.0.0.0/8',
+  'fd00::/8',
+]
+
+[botdetection.ip_lists]
+block_ip = []
+pass_ip = [
+  '127.0.0.0/8',
+  '::1',
+  '192.168.0.0/16',
+  '172.16.0.0/12',
+  '10.0.0.0/8',
+  'fd00::/8',
+]
+pass_searxng_org = false
+
+[botdetection.ip_limit]
+filter_link_local = false
+link_token = false

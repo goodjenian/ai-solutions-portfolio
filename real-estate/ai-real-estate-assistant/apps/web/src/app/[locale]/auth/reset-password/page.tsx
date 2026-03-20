@@ -1,0 +1,190 @@
+'use client';
+
+import { Suspense, useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Building2, Loader2, ArrowLeft, CheckCircle2 } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { resetPassword } from '@/lib/auth';
+
+function ResetPasswordForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  // Get token from URL
+  useEffect(() => {
+    const tokenParam = searchParams.get('token');
+    if (!tokenParam) {
+      setError('Invalid or missing reset token');
+    } else {
+      setToken(tokenParam);
+    }
+  }, [searchParams]);
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!token) {
+      setError('Invalid or missing reset token');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // Password validation
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError('Password must contain at least one uppercase letter');
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      setError('Password must contain at least one lowercase letter');
+      return;
+    }
+    if (!/\d/.test(password)) {
+      setError('Password must contain at least one digit');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await resetPassword(token, password);
+      setIsSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to reset password');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isSuccess) {
+    return (
+      <Card className="w-full max-w-sm">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-2">
+            <div className="rounded-full bg-green-100 dark:bg-green-900/20 p-3">
+              <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl">Password reset</CardTitle>
+          <CardDescription>Your password has been reset successfully</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-center text-muted-foreground">
+            You can now log in with your new password.
+          </p>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <Button className="w-full" onClick={() => router.push('/auth/login')}>
+            Go to login
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader className="space-y-1 text-center">
+        <div className="flex justify-center mb-2">
+          <div className="rounded-full bg-primary/10 p-3">
+            <Building2 className="h-6 w-6 text-primary" />
+          </div>
+        </div>
+        <CardTitle className="text-2xl">Reset password</CardTitle>
+        <CardDescription>Enter your new password below</CardDescription>
+      </CardHeader>
+      <form onSubmit={onSubmit}>
+        <CardContent className="grid gap-4">
+          {error && (
+            <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">{error}</div>
+          )}
+          <div className="grid gap-2">
+            <Label htmlFor="password">New Password</Label>
+            <Input
+              id="password"
+              type="password"
+              required
+              disabled={isLoading || !token}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Min. 8 chars, uppercase, lowercase, digit"
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              required
+              disabled={isLoading || !token}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter your password"
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={isLoading || !token || !password || !confirmPassword}
+          >
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Reset password
+          </Button>
+          <div className="text-sm text-center text-muted-foreground">
+            <Link
+              href="/auth/login"
+              className="inline-flex items-center gap-1 text-primary hover:underline"
+            >
+              <ArrowLeft className="h-3 w-3" />
+              Back to login
+            </Link>
+          </div>
+        </CardFooter>
+      </form>
+    </Card>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <Card className="w-full max-w-sm">
+          <CardContent className="flex justify-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </CardContent>
+        </Card>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}

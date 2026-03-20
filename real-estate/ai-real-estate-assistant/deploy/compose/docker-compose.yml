@@ -1,0 +1,182 @@
+# AI Real Estate Assistant - Docker Compose Configuration
+#
+# Primary: External AI Models (OpenAI, Anthropic, Google, etc.)
+# - Requires at least one external API key in .env
+# - Backend and Frontend work without Ollama
+#
+# Optional: Local LLM with Ollama
+# - Start with: --profile local-llm
+# - GPU support: -f docker-compose.gpu.yml (LOCAL DEVELOPMENT ONLY)
+
+services:
+  backend:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.backend
+    container_name: ai-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - API_ACCESS_KEY=${API_ACCESS_KEY:-dev-secret-key}
+      - DEFAULT_PROVIDER=${DEFAULT_PROVIDER:-openai}
+      - OLLAMA_DEFAULT_MODEL=${OLLAMA_DEFAULT_MODEL:-llama3.2:3b}
+      - INTERNET_ENABLED=${INTERNET_ENABLED:-false}
+      - SEARXNG_URL=${SEARXNG_URL:-http://searxng:8080}
+      - API_RATE_LIMIT_ENABLED=${API_RATE_LIMIT_ENABLED:-true}
+      - API_RATE_LIMIT_RPM=${API_RATE_LIMIT_RPM:-600}
+      - CORS_ALLOW_ORIGINS=${CORS_ALLOW_ORIGINS}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - CONTEXT7_API_KEY=${CONTEXT7_API_KEY}
+      - OLLAMA_API_BASE=${OLLAMA_API_BASE:-http://ollama:11434}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_PROVIDER=${SMTP_PROVIDER}
+      - UPTIME_MONITOR_ENABLED=${UPTIME_MONITOR_ENABLED:-false}
+      - UPTIME_MONITOR_HEALTH_URL=${UPTIME_MONITOR_HEALTH_URL:-http://localhost:8000/health}
+      - UPTIME_MONITOR_EMAIL_TO=${UPTIME_MONITOR_EMAIL_TO}
+      - UPTIME_MONITOR_INTERVAL=${UPTIME_MONITOR_INTERVAL:-60}
+      - UPTIME_MONITOR_FAIL_THRESHOLD=${UPTIME_MONITOR_FAIL_THRESHOLD:-3}
+      - UPTIME_MONITOR_COOLDOWN_SECONDS=${UPTIME_MONITOR_COOLDOWN_SECONDS:-1800}
+      - vector_persist_enabled=${vector_persist_enabled:-false}
+      - CHROMA_FORCE_FASTEMBED=${CHROMA_FORCE_FASTEMBED}
+      - FORCE_FASTEMBED=${FORCE_FASTEMBED}
+      # Response Cache Configuration (TASK-017)
+      - CACHE_ENABLED=${CACHE_ENABLED:-true}
+      - CACHE_TTL_SECONDS=${CACHE_TTL_SECONDS:-300}
+      - CACHE_REDIS_URL=${CACHE_REDIS_URL:-redis://redis:6379}
+      - CACHE_PREFIX=${CACHE_PREFIX:-api_cache}
+      - CACHE_MAX_MEMORY_MB=${CACHE_MAX_MEMORY_MB:-100}
+      # Metrics Configuration (TASK-017)
+      - METRICS_ENABLED=${METRICS_ENABLED:-true}
+      - METRICS_PATH=${METRICS_PATH:-/metrics}
+      # Connection Pool Configuration (TASK-017)
+      - DB_POOL_SIZE=${DB_POOL_SIZE:-10}
+      - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-20}
+      - DB_POOL_TIMEOUT_SECONDS=${DB_POOL_TIMEOUT_SECONDS:-30}
+      - DB_POOL_RECYCLE_SECONDS=${DB_POOL_RECYCLE_SECONDS:-3600}
+      - POOL_MAX_WORKERS=${POOL_MAX_WORKERS:-10}
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - ./data:/app/data
+      - ./.preferences:/app/.preferences
+      - ./.notifications:/app/.notifications
+      - ./.sessions:/app/.sessions
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # No Ollama dependency - backend works with external providers
+
+  frontend:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.frontend
+    container_name: ai-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-/api/v1}
+      - BACKEND_API_URL=${BACKEND_API_URL:-http://backend:8000/api/v1}
+      - API_ACCESS_KEY=${API_ACCESS_KEY:-dev-secret-key}
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  ollama:
+    profiles: ["local-llm"]  # Optional: only start with --profile local-llm
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_DEFAULT_MODEL=${OLLAMA_DEFAULT_MODEL:-llama3.2:3b}
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    entrypoint: ["sh", "-lc"]
+    command: ["ollama serve & until ollama list >/dev/null 2>&1; do sleep 1; done; ollama pull \"$$OLLAMA_DEFAULT_MODEL\"; wait"]
+    healthcheck:
+      test: ["CMD-SHELL", "ollama show ${OLLAMA_DEFAULT_MODEL:-llama3.2:3b} >/dev/null 2>&1"]
+      interval: 30s
+      timeout: 10s
+      retries: 60
+      start_period: 20s
+
+  ollama_gpu:
+    profiles: ["local-llm", "gpu"]  # Requires both profiles: --profile local-llm --profile gpu
+    image: ollama/ollama:latest
+    ports:
+      - "11435:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_DEFAULT_MODEL=${OLLAMA_DEFAULT_MODEL:-llama3.2:3b}
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    entrypoint: ["sh", "-lc"]
+    command: ["ollama serve & until ollama list >/dev/null 2>&1; do sleep 1; done; ollama pull \"$$OLLAMA_DEFAULT_MODEL\"; wait"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "ollama show ${OLLAMA_DEFAULT_MODEL:-llama3.2:3b} >/dev/null 2>&1"]
+      interval: 30s
+      timeout: 10s
+      retries: 60
+      start_period: 20s
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    profiles: ["internet"]
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+    environment:
+      - SEARXNG_BASE_URL=${SEARXNG_BASE_URL:-http://localhost:8081/}
+      - SEARXNG_SECRET_KEY=${SEARXNG_SECRET_KEY:-change-me}
+    volumes:
+      - ../../apps/api/config/searxng:/etc/searxng:rw
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --header='X-Forwarded-For: 1.1.1.1' --header='X-Real-IP: 1.1.1.1' http://localhost:8080/ >/dev/null 2>&1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  ollama_data:
+  redis_data:

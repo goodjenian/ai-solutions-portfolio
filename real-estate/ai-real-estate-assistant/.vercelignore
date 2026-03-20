@@ -1,0 +1,108 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependencies
+node_modules
+**/node_modules
+apps/web/node_modules
+.pnpm-store
+
+# Python virtualenvs / caches
+venv
+.venv
+.venv_ci
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+coverage.xml
+htmlcov
+.tox
+.nox
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# Build artifacts
+.next
+out
+coverage
+.nyc_output
+
+# Local app/runtime data
+chroma_db
+data
+artifacts
+tmp
+*.log
+
+# IDE and editor files
+.vscode
+.idea
+.preferences
+.notifications
+.sessions
+.alerts
+.test_alerts
+.app_cache
+.trae
+.user_data
+.history
+.claude
+.taskmaster
+.test_vectors
+.test_alerts
+
+# Development files
+.git
+.github
+.gitattributes
+devcontainer
+.devcontainer
+k8s
+
+# Documentation (already in docs/)
+README.md
+CONTRIBUTING.md
+CHANGELOG.md
+LICENSE
+
+# CI/CD files (not needed for deployment)
+.github
+.gitlab-ci.yml
+.travis.yml
+.circleci
+appveyor.yml
+
+# Dataset files
+dataset
+*.csv
+*.xlsx
+*.xls
+*.ods
+
+# Test files
+**/__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.test.js
+**/*.test.py
+**/*.spec.ts
+**/*.spec.tsx
+**/*.spec.js
+
+# Misc
+.DS_Store
+Thumbs.db

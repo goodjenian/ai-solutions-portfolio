@@ -1,0 +1,163 @@
+"""
+Google (Gemini) model provider implementation.
+
+Supports Gemini 1.5 Pro, Gemini 1.5 Flash, and other Google models.
+"""
+
+import os
+from typing import Any, Dict, List, Optional
+
+from langchain_core.language_models import BaseChatModel
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import SecretStr
+
+from .base import (
+    ModelCapability,
+    ModelInfo,
+    PricingInfo,
+    RemoteModelProvider,
+)
+
+
+class GoogleProvider(RemoteModelProvider):
+    """Google (Gemini) model provider."""
+
+    @property
+    def name(self) -> str:
+        return "google"
+
+    @property
+    def display_name(self) -> str:
+        return "Google (Gemini)"
+
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        super().__init__(config)
+        # Get API key from config, environment, or None
+        if "api_key" not in self.config:
+            self.config["api_key"] = os.getenv("GOOGLE_API_KEY")
+
+    def list_models(self) -> List[ModelInfo]:
+        """List available Google models."""
+        return [
+            # Latest Models (Gemini 2.0 Series - 2025)
+            ModelInfo(
+                id="gemini-2.0-flash-exp",
+                display_name="Gemini 2.0 Flash (Latest)",
+                provider_name=self.display_name,
+                context_window=1000000,
+                pricing=PricingInfo(
+                    input_price_per_1m=0.075,  # Pricing when GA
+                    output_price_per_1m=0.30,
+                ),
+                capabilities=[
+                    ModelCapability.STREAMING,
+                    ModelCapability.FUNCTION_CALLING,
+                    ModelCapability.VISION,
+                    ModelCapability.JSON_MODE,
+                    ModelCapability.SYSTEM_MESSAGES,
+                ],
+                description="Next-generation model with improved capabilities",
+                recommended_for=["latest features", "fast responses", "general purpose"],
+            ),
+            # Gemini 1.5 Series - Proven and stable
+            ModelInfo(
+                id="gemini-1.5-pro",
+                display_name="Gemini 1.5 Pro (Recommended)",
+                provider_name=self.display_name,
+                context_window=2000000,  # 2M tokens!
+                pricing=PricingInfo(input_price_per_1m=1.25, output_price_per_1m=5.00),
+                capabilities=[
+                    ModelCapability.STREAMING,
+                    ModelCapability.FUNCTION_CALLING,
+                    ModelCapability.VISION,
+                    ModelCapability.JSON_MODE,
+                    ModelCapability.SYSTEM_MESSAGES,
+                ],
+                description="Most capable Gemini model with massive 2M token context",
+                recommended_for=[
+                    "long documents",
+                    "complex analysis",
+                    "multimodal tasks",
+                    "large contexts",
+                ],
+            ),
+            ModelInfo(
+                id="gemini-1.5-flash",
+                display_name="Gemini 1.5 Flash",
+                provider_name=self.display_name,
+                context_window=1000000,  # 1M tokens
+                pricing=PricingInfo(input_price_per_1m=0.075, output_price_per_1m=0.30),
+                capabilities=[
+                    ModelCapability.STREAMING,
+                    ModelCapability.FUNCTION_CALLING,
+                    ModelCapability.VISION,
+                    ModelCapability.JSON_MODE,
+                    ModelCapability.SYSTEM_MESSAGES,
+                ],
+                description="Fast and efficient model with 1M token context",
+                recommended_for=[
+                    "fast responses",
+                    "cost-effective",
+                    "high volume",
+                    "balanced performance",
+                ],
+            ),
+        ]
+
+    def create_model(
+        self,
+        model_id: str,
+        temperature: float = 0.0,
+        max_tokens: Optional[int] = None,
+        streaming: bool = True,
+        request_timeout: Optional[float] = None,
+        **kwargs: Any,
+    ) -> BaseChatModel:
+        """Create Google model instance."""
+        # Validate model exists
+        model_info = self.get_model_info(model_id)
+        if not model_info:
+            available = [m.id for m in self.list_models()]
+            raise ValueError(
+                f"Model '{model_id}' not available. Available models: {', '.join(available)}"
+            )
+
+        # Validate API key
+        api_key = self.get_api_key()
+        if not api_key:
+            raise RuntimeError(
+                "Google API key required. "
+                "Set GOOGLE_API_KEY environment variable or provide in config."
+            )
+
+        # Get timeout from config or use default from settings
+        timeout = request_timeout
+        if timeout is None:
+            timeout = self.config.get("request_timeout")
+        if timeout is None:
+            from config.settings import get_settings
+
+            timeout = get_settings().llm_request_timeout_seconds
+
+        # Create model with timeout
+        return ChatGoogleGenerativeAI(
+            model=model_id,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            api_key=SecretStr(api_key),
+            timeout=timeout,
+            **kwargs,
+        )
+
+    def validate_connection(self) -> tuple[bool, Optional[str]]:
+        """Validate Google connection."""
+        api_key = self.get_api_key()
+        if not api_key:
+            return False, "API key not provided"
+
+        try:
+            # Try to create a minimal model instance
+            self.create_model("gemini-1.5-flash")
+            return True, None
+        except Exception as e:
+            return False, f"Connection failed: {str(e)}"

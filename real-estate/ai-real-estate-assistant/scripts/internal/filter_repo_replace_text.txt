@@ -1,0 +1,1 @@
+regex:X-API-Key:\s*[^\r\n"]+==>X-API-Key: your-api-key

@@ -1,0 +1,5838 @@
+{
+  "components": {
+    "schemas": {
+      "AdminVersionInfo": {
+        "properties": {
+          "app_title": {
+            "title": "App Title",
+            "type": "string"
+          },
+          "environment": {
+            "title": "Environment",
+            "type": "string"
+          },
+          "platform": {
+            "title": "Platform",
+            "type": "string"
+          },
+          "python_version": {
+            "title": "Python Version",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "environment",
+          "app_title",
+          "python_version",
+          "platform"
+        ],
+        "title": "AdminVersionInfo",
+        "type": "object"
+      },
+      "Body_upload_documents_api_v1_rag_upload_post": {
+        "properties": {
+          "files": {
+            "items": {
+              "format": "binary",
+              "type": "string"
+            },
+            "title": "Files",
+            "type": "array"
+          }
+        },
+        "required": [
+          "files"
+        ],
+        "title": "Body_upload_documents_api_v1_rag_upload_post",
+        "type": "object"
+      },
+      "CRMContactRequest": {
+        "properties": {
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CRMContactRequest",
+        "type": "object"
+      },
+      "CRMContactResponse": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "CRMContactResponse",
+        "type": "object"
+      },
+      "ChatRequest": {
+        "description": "Chat request model.",
+        "properties": {
+          "include_intermediate_steps": {
+            "default": false,
+            "title": "Include Intermediate Steps",
+            "type": "boolean"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "stream": {
+            "default": false,
+            "title": "Stream",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "ChatRequest",
+        "type": "object"
+      },
+      "ChatResponse": {
+        "description": "Chat response model.",
+        "properties": {
+          "intermediate_steps": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intermediate Steps"
+          },
+          "response": {
+            "title": "Response",
+            "type": "string"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "sources": {
+            "default": [],
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "sources_truncated": {
+            "default": false,
+            "title": "Sources Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "response"
+        ],
+        "title": "ChatResponse",
+        "type": "object"
+      },
+      "CommuteRankingRequest": {
+        "description": "Request model for commute-based property ranking.",
+        "properties": {
+          "departure_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional departure time as ISO string (e.g., '2024-01-15T08:30:00')",
+            "title": "Departure Time"
+          },
+          "destination_lat": {
+            "description": "Destination latitude",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Destination Lat",
+            "type": "number"
+          },
+          "destination_lon": {
+            "description": "Destination longitude",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Destination Lon",
+            "type": "number"
+          },
+          "destination_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional destination name for display",
+            "title": "Destination Name"
+          },
+          "mode": {
+            "default": "transit",
+            "description": "Commute mode: 'driving', 'walking', 'bicycling', or 'transit'",
+            "title": "Mode",
+            "type": "string"
+          },
+          "property_ids": {
+            "description": "Comma-separated list of property IDs to rank",
+            "minLength": 1,
+            "title": "Property Ids",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_ids",
+          "destination_lat",
+          "destination_lon"
+        ],
+        "title": "CommuteRankingRequest",
+        "type": "object"
+      },
+      "CommuteRankingResponse": {
+        "description": "Response model for commute-based property ranking.",
+        "properties": {
+          "count": {
+            "description": "Number of properties ranked",
+            "title": "Count",
+            "type": "integer"
+          },
+          "destination_lat": {
+            "title": "Destination Lat",
+            "type": "number"
+          },
+          "destination_lon": {
+            "title": "Destination Lon",
+            "type": "number"
+          },
+          "destination_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destination Name"
+          },
+          "fastest_duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fastest Duration Seconds"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "rankings": {
+            "items": {
+              "$ref": "#/components/schemas/CommuteTimeResult"
+            },
+            "title": "Rankings",
+            "type": "array"
+          },
+          "slowest_duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slowest Duration Seconds"
+          }
+        },
+        "required": [
+          "destination_lat",
+          "destination_lon",
+          "mode",
+          "rankings",
+          "count"
+        ],
+        "title": "CommuteRankingResponse",
+        "type": "object"
+      },
+      "CommuteTimeRequest": {
+        "description": "Request model for commute time analysis.",
+        "properties": {
+          "departure_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional departure time as ISO string (e.g., '2024-01-15T08:30:00')",
+            "title": "Departure Time"
+          },
+          "destination_lat": {
+            "description": "Destination latitude",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Destination Lat",
+            "type": "number"
+          },
+          "destination_lon": {
+            "description": "Destination longitude",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Destination Lon",
+            "type": "number"
+          },
+          "destination_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional destination name for display",
+            "title": "Destination Name"
+          },
+          "mode": {
+            "default": "transit",
+            "description": "Commute mode: 'driving', 'walking', 'bicycling', or 'transit'",
+            "title": "Mode",
+            "type": "string"
+          },
+          "property_id": {
+            "description": "Property ID to analyze commute from",
+            "minLength": 1,
+            "title": "Property Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id",
+          "destination_lat",
+          "destination_lon"
+        ],
+        "title": "CommuteTimeRequest",
+        "type": "object"
+      },
+      "CommuteTimeResponse": {
+        "description": "Response model for commute time analysis.",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/CommuteTimeResult"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "CommuteTimeResponse",
+        "type": "object"
+      },
+      "CommuteTimeResult": {
+        "description": "Single property commute time result.",
+        "properties": {
+          "arrival_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrival Time"
+          },
+          "departure_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Departure Time"
+          },
+          "destination_lat": {
+            "title": "Destination Lat",
+            "type": "number"
+          },
+          "destination_lon": {
+            "title": "Destination Lon",
+            "type": "number"
+          },
+          "destination_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destination Name"
+          },
+          "distance_meters": {
+            "description": "Distance in meters",
+            "title": "Distance Meters",
+            "type": "integer"
+          },
+          "distance_text": {
+            "description": "Human-readable distance (e.g., '12.5km')",
+            "title": "Distance Text",
+            "type": "string"
+          },
+          "duration_seconds": {
+            "description": "Commute duration in seconds",
+            "title": "Duration Seconds",
+            "type": "integer"
+          },
+          "duration_text": {
+            "description": "Human-readable duration (e.g., '45m')",
+            "title": "Duration Text",
+            "type": "string"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "origin_lat": {
+            "title": "Origin Lat",
+            "type": "number"
+          },
+          "origin_lon": {
+            "title": "Origin Lon",
+            "type": "number"
+          },
+          "polyline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Encoded polyline for route visualization",
+            "title": "Polyline"
+          },
+          "property_id": {
+            "title": "Property Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id",
+          "origin_lat",
+          "origin_lon",
+          "destination_lat",
+          "destination_lon",
+          "duration_seconds",
+          "duration_text",
+          "distance_meters",
+          "distance_text",
+          "mode"
+        ],
+        "title": "CommuteTimeResult",
+        "type": "object"
+      },
+      "ComparePropertiesRequest": {
+        "properties": {
+          "property_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Property Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "property_ids"
+        ],
+        "title": "ComparePropertiesRequest",
+        "type": "object"
+      },
+      "ComparePropertiesResponse": {
+        "properties": {
+          "properties": {
+            "items": {
+              "$ref": "#/components/schemas/ComparedProperty"
+            },
+            "title": "Properties",
+            "type": "array"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/CompareSummary"
+          }
+        },
+        "required": [
+          "properties",
+          "summary"
+        ],
+        "title": "ComparePropertiesResponse",
+        "type": "object"
+      },
+      "CompareSummary": {
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "max_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price"
+          },
+          "min_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price"
+          },
+          "price_difference": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Difference"
+          }
+        },
+        "required": [
+          "count"
+        ],
+        "title": "CompareSummary",
+        "type": "object"
+      },
+      "ComparedProperty": {
+        "properties": {
+          "area_sqm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area Sqm"
+          },
+          "bathrooms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bathrooms"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "price_per_sqm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Per Sqm"
+          },
+          "property_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Type"
+          },
+          "rooms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rooms"
+          },
+          "year_built": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year Built"
+          }
+        },
+        "title": "ComparedProperty",
+        "type": "object"
+      },
+      "DataEnrichmentRequest": {
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          }
+        },
+        "required": [
+          "address"
+        ],
+        "title": "DataEnrichmentRequest",
+        "type": "object"
+      },
+      "DataEnrichmentResponse": {
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "address"
+        ],
+        "title": "DataEnrichmentResponse",
+        "type": "object"
+      },
+      "ExcelSheetsRequest": {
+        "description": "Request model for getting Excel sheet names.",
+        "properties": {
+          "file_url": {
+            "description": "URL to Excel file",
+            "title": "File Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_url"
+        ],
+        "title": "ExcelSheetsRequest",
+        "type": "object"
+      },
+      "ExcelSheetsResponse": {
+        "description": "Response model for Excel sheet names.",
+        "properties": {
+          "default_sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Sheet"
+          },
+          "file_url": {
+            "title": "File Url",
+            "type": "string"
+          },
+          "row_count": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Row count per sheet",
+            "title": "Row Count",
+            "type": "object"
+          },
+          "sheet_names": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Sheet Names",
+            "type": "array"
+          }
+        },
+        "required": [
+          "file_url",
+          "sheet_names"
+        ],
+        "title": "ExcelSheetsResponse",
+        "type": "object"
+      },
+      "ExportFormat": {
+        "description": "Supported export formats.",
+        "enum": [
+          "csv",
+          "xlsx",
+          "json",
+          "md",
+          "pdf"
+        ],
+        "title": "ExportFormat",
+        "type": "string"
+      },
+      "ExportPropertiesRequest": {
+        "properties": {
+          "columns": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Columns"
+          },
+          "csv_decimal": {
+            "default": ".",
+            "title": "Csv Decimal",
+            "type": "string"
+          },
+          "csv_delimiter": {
+            "default": ",",
+            "title": "Csv Delimiter",
+            "type": "string"
+          },
+          "format": {
+            "$ref": "#/components/schemas/ExportFormat"
+          },
+          "include_header": {
+            "default": true,
+            "title": "Include Header",
+            "type": "boolean"
+          },
+          "include_metadata": {
+            "default": true,
+            "title": "Include Metadata",
+            "type": "boolean"
+          },
+          "include_statistics": {
+            "default": true,
+            "title": "Include Statistics",
+            "type": "boolean"
+          },
+          "include_summary": {
+            "default": true,
+            "title": "Include Summary",
+            "type": "boolean"
+          },
+          "max_properties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Properties"
+          },
+          "pretty": {
+            "default": true,
+            "title": "Pretty",
+            "type": "boolean"
+          },
+          "property_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Ids"
+          },
+          "search": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "format"
+        ],
+        "title": "ExportPropertiesRequest",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthCheck": {
+        "description": "Health check response model.",
+        "properties": {
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "HealthCheck",
+        "type": "object"
+      },
+      "IngestRequest": {
+        "description": "Request model for data ingestion.",
+        "properties": {
+          "file_urls": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Urls"
+          },
+          "force": {
+            "default": false,
+            "title": "Force",
+            "type": "boolean"
+          },
+          "header_row": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": 0,
+            "description": "Header row number for Excel files (0-indexed)",
+            "title": "Header Row"
+          },
+          "sheet_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Excel sheet name to load (for .xlsx, .xls, .ods files)",
+            "title": "Sheet Name"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional source name for tracking (e.g., 'properties_2024_q1')",
+            "title": "Source Name"
+          }
+        },
+        "title": "IngestRequest",
+        "type": "object"
+      },
+      "IngestResponse": {
+        "description": "Response model for data ingestion.",
+        "properties": {
+          "errors": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "properties_processed": {
+            "title": "Properties Processed",
+            "type": "integer"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Type"
+          }
+        },
+        "required": [
+          "message",
+          "properties_processed"
+        ],
+        "title": "IngestResponse",
+        "type": "object"
+      },
+      "InvestmentAnalysisInput": {
+        "description": "Input for investment property analysis.",
+        "properties": {
+          "closing_costs": {
+            "default": 0.0,
+            "description": "Closing costs (one-time)",
+            "minimum": 0.0,
+            "title": "Closing Costs",
+            "type": "number"
+          },
+          "down_payment_percent": {
+            "default": 20.0,
+            "description": "Down payment as percentage (e.g., 20 for 20%)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Down Payment Percent",
+            "type": "number"
+          },
+          "hoa_monthly": {
+            "default": 0.0,
+            "description": "Monthly HOA/condo fees",
+            "minimum": 0.0,
+            "title": "Hoa Monthly",
+            "type": "number"
+          },
+          "insurance_monthly": {
+            "default": 0.0,
+            "description": "Monthly home insurance",
+            "minimum": 0.0,
+            "title": "Insurance Monthly",
+            "type": "number"
+          },
+          "interest_rate": {
+            "default": 4.5,
+            "description": "Annual interest rate as percentage (e.g., 4.5 for 4.5%)",
+            "minimum": 0.0,
+            "title": "Interest Rate",
+            "type": "number"
+          },
+          "loan_years": {
+            "default": 30,
+            "description": "Loan term in years",
+            "exclusiveMinimum": 0.0,
+            "maximum": 50.0,
+            "title": "Loan Years",
+            "type": "integer"
+          },
+          "maintenance_percent": {
+            "default": 1.0,
+            "description": "Annual maintenance as % of property value",
+            "minimum": 0.0,
+            "title": "Maintenance Percent",
+            "type": "number"
+          },
+          "management_percent": {
+            "default": 0.0,
+            "description": "Property management fee % of rent",
+            "minimum": 0.0,
+            "title": "Management Percent",
+            "type": "number"
+          },
+          "monthly_rent": {
+            "description": "Expected monthly rental income",
+            "exclusiveMinimum": 0.0,
+            "title": "Monthly Rent",
+            "type": "number"
+          },
+          "property_price": {
+            "description": "Purchase price of the property",
+            "exclusiveMinimum": 0.0,
+            "title": "Property Price",
+            "type": "number"
+          },
+          "property_tax_monthly": {
+            "default": 0.0,
+            "description": "Monthly property tax",
+            "minimum": 0.0,
+            "title": "Property Tax Monthly",
+            "type": "number"
+          },
+          "renovation_costs": {
+            "default": 0.0,
+            "description": "Renovation/buy-and-hold costs (one-time)",
+            "minimum": 0.0,
+            "title": "Renovation Costs",
+            "type": "number"
+          },
+          "vacancy_rate": {
+            "default": 5.0,
+            "description": "Vacancy rate percentage",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Vacancy Rate",
+            "type": "number"
+          }
+        },
+        "required": [
+          "property_price",
+          "monthly_rent"
+        ],
+        "title": "InvestmentAnalysisInput",
+        "type": "object"
+      },
+      "InvestmentAnalysisResult": {
+        "description": "Result from investment property analysis.",
+        "properties": {
+          "annual_cash_flow": {
+            "title": "Annual Cash Flow",
+            "type": "number"
+          },
+          "annual_expenses": {
+            "title": "Annual Expenses",
+            "type": "number"
+          },
+          "annual_income": {
+            "title": "Annual Income",
+            "type": "number"
+          },
+          "cap_rate": {
+            "title": "Cap Rate",
+            "type": "number"
+          },
+          "cash_on_cash_roi": {
+            "title": "Cash On Cash Roi",
+            "type": "number"
+          },
+          "gross_yield": {
+            "title": "Gross Yield",
+            "type": "number"
+          },
+          "investment_score": {
+            "title": "Investment Score",
+            "type": "number"
+          },
+          "monthly_cash_flow": {
+            "title": "Monthly Cash Flow",
+            "type": "number"
+          },
+          "monthly_expenses": {
+            "title": "Monthly Expenses",
+            "type": "number"
+          },
+          "monthly_income": {
+            "title": "Monthly Income",
+            "type": "number"
+          },
+          "monthly_mortgage": {
+            "title": "Monthly Mortgage",
+            "type": "number"
+          },
+          "net_yield": {
+            "title": "Net Yield",
+            "type": "number"
+          },
+          "score_breakdown": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Score Breakdown",
+            "type": "object"
+          },
+          "total_investment": {
+            "title": "Total Investment",
+            "type": "number"
+          }
+        },
+        "required": [
+          "monthly_cash_flow",
+          "annual_cash_flow",
+          "cash_on_cash_roi",
+          "cap_rate",
+          "gross_yield",
+          "net_yield",
+          "total_investment",
+          "monthly_income",
+          "monthly_expenses",
+          "annual_income",
+          "annual_expenses",
+          "monthly_mortgage",
+          "investment_score",
+          "score_breakdown"
+        ],
+        "title": "InvestmentAnalysisResult",
+        "type": "object"
+      },
+      "LegalCheckRequest": {
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "LegalCheckRequest",
+        "type": "object"
+      },
+      "LegalCheckResponse": {
+        "properties": {
+          "risks": {
+            "default": [],
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Risks",
+            "type": "array"
+          },
+          "score": {
+            "default": 0.0,
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "title": "LegalCheckResponse",
+        "type": "object"
+      },
+      "ListingType": {
+        "enum": [
+          "rent",
+          "sale",
+          "room",
+          "sublease"
+        ],
+        "title": "ListingType",
+        "type": "string"
+      },
+      "LocationAnalysisRequest": {
+        "properties": {
+          "property_id": {
+            "title": "Property Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id"
+        ],
+        "title": "LocationAnalysisRequest",
+        "type": "object"
+      },
+      "LocationAnalysisResponse": {
+        "properties": {
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lon": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lon"
+          },
+          "neighborhood": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Neighborhood"
+          },
+          "property_id": {
+            "title": "Property Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id"
+        ],
+        "title": "LocationAnalysisResponse",
+        "type": "object"
+      },
+      "ModelCatalogItem": {
+        "properties": {
+          "capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Capabilities",
+            "type": "array"
+          },
+          "context_window": {
+            "title": "Context Window",
+            "type": "integer"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "pricing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelPricing"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider_name": {
+            "title": "Provider Name",
+            "type": "string"
+          },
+          "recommended_for": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Recommended For",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "display_name",
+          "provider_name",
+          "context_window"
+        ],
+        "title": "ModelCatalogItem",
+        "type": "object"
+      },
+      "ModelPreferences": {
+        "properties": {
+          "preferred_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Model"
+          },
+          "preferred_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Provider"
+          }
+        },
+        "title": "ModelPreferences",
+        "type": "object"
+      },
+      "ModelPreferencesUpdate": {
+        "properties": {
+          "preferred_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Model"
+          },
+          "preferred_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Provider"
+          }
+        },
+        "title": "ModelPreferencesUpdate",
+        "type": "object"
+      },
+      "ModelPricing": {
+        "properties": {
+          "currency": {
+            "default": "USD",
+            "title": "Currency",
+            "type": "string"
+          },
+          "input_price_per_1m": {
+            "title": "Input Price Per 1M",
+            "type": "number"
+          },
+          "output_price_per_1m": {
+            "title": "Output Price Per 1M",
+            "type": "number"
+          }
+        },
+        "required": [
+          "input_price_per_1m",
+          "output_price_per_1m"
+        ],
+        "title": "ModelPricing",
+        "type": "object"
+      },
+      "ModelProviderCatalog": {
+        "properties": {
+          "available_models": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available Models"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "is_local": {
+            "title": "Is Local",
+            "type": "boolean"
+          },
+          "models": {
+            "items": {
+              "$ref": "#/components/schemas/ModelCatalogItem"
+            },
+            "title": "Models",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "requires_api_key": {
+            "title": "Requires Api Key",
+            "type": "boolean"
+          },
+          "runtime_available": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runtime Available"
+          },
+          "runtime_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runtime Error"
+          }
+        },
+        "required": [
+          "name",
+          "display_name",
+          "is_local",
+          "requires_api_key",
+          "models"
+        ],
+        "title": "ModelProviderCatalog",
+        "type": "object"
+      },
+      "ModelRuntimeTestResponse": {
+        "properties": {
+          "available_models": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available Models"
+          },
+          "is_local": {
+            "title": "Is Local",
+            "type": "boolean"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "runtime_available": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runtime Available"
+          },
+          "runtime_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runtime Error"
+          }
+        },
+        "required": [
+          "provider",
+          "is_local"
+        ],
+        "title": "ModelRuntimeTestResponse",
+        "type": "object"
+      },
+      "MortgageInput": {
+        "description": "Input for mortgage calculator.",
+        "properties": {
+          "down_payment_percent": {
+            "default": 20.0,
+            "description": "Down payment as percentage (e.g., 20 for 20%)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Down Payment Percent",
+            "type": "number"
+          },
+          "interest_rate": {
+            "default": 4.5,
+            "description": "Annual interest rate as percentage (e.g., 4.5 for 4.5%)",
+            "minimum": 0.0,
+            "title": "Interest Rate",
+            "type": "number"
+          },
+          "loan_years": {
+            "default": 30,
+            "description": "Loan term in years",
+            "exclusiveMinimum": 0.0,
+            "maximum": 50.0,
+            "title": "Loan Years",
+            "type": "integer"
+          },
+          "property_price": {
+            "description": "Total property price",
+            "exclusiveMinimum": 0.0,
+            "title": "Property Price",
+            "type": "number"
+          }
+        },
+        "required": [
+          "property_price"
+        ],
+        "title": "MortgageInput",
+        "type": "object"
+      },
+      "MortgageResult": {
+        "description": "Result from mortgage calculator.",
+        "properties": {
+          "breakdown": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Breakdown",
+            "type": "object"
+          },
+          "down_payment": {
+            "title": "Down Payment",
+            "type": "number"
+          },
+          "loan_amount": {
+            "title": "Loan Amount",
+            "type": "number"
+          },
+          "monthly_payment": {
+            "title": "Monthly Payment",
+            "type": "number"
+          },
+          "total_cost": {
+            "title": "Total Cost",
+            "type": "number"
+          },
+          "total_interest": {
+            "title": "Total Interest",
+            "type": "number"
+          }
+        },
+        "required": [
+          "monthly_payment",
+          "total_interest",
+          "total_cost",
+          "down_payment",
+          "loan_amount",
+          "breakdown"
+        ],
+        "title": "MortgageResult",
+        "type": "object"
+      },
+      "NegotiationRate": {
+        "description": "Enumeration of negotiation rates.",
+        "enum": [
+          "high",
+          "middle",
+          "low"
+        ],
+        "title": "NegotiationRate",
+        "type": "string"
+      },
+      "NeighborhoodQualityInput": {
+        "description": "Input for neighborhood quality index calculation.",
+        "properties": {
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "City name for data enrichment",
+            "title": "City"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Latitude coordinate",
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Longitude coordinate",
+            "title": "Longitude"
+          },
+          "neighborhood": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Neighborhood name",
+            "title": "Neighborhood"
+          },
+          "property_id": {
+            "description": "Property ID to analyze",
+            "minLength": 1,
+            "title": "Property Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id"
+        ],
+        "title": "NeighborhoodQualityInput",
+        "type": "object"
+      },
+      "NeighborhoodQualityResponse": {
+        "description": "Response model for neighborhood quality analysis.",
+        "properties": {
+          "amenities_score": {
+            "description": "Amenities score (0-100)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Amenities Score",
+            "type": "number"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "data_sources": {
+            "description": "Data sources used for scoring",
+            "items": {
+              "type": "string"
+            },
+            "title": "Data Sources",
+            "type": "array"
+          },
+          "green_space_score": {
+            "description": "Green space score (0-100)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Green Space Score",
+            "type": "number"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "neighborhood": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Neighborhood"
+          },
+          "overall_score": {
+            "description": "Overall neighborhood quality score (0-100)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Overall Score",
+            "type": "number"
+          },
+          "property_id": {
+            "title": "Property Id",
+            "type": "string"
+          },
+          "safety_score": {
+            "description": "Safety score (0-100)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Safety Score",
+            "type": "number"
+          },
+          "schools_score": {
+            "description": "Schools score (0-100)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Schools Score",
+            "type": "number"
+          },
+          "score_breakdown": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Detailed scoring breakdown",
+            "title": "Score Breakdown",
+            "type": "object"
+          },
+          "walkability_score": {
+            "description": "Walkability score (0-100)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Walkability Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "property_id",
+          "overall_score",
+          "safety_score",
+          "schools_score",
+          "amenities_score",
+          "walkability_score",
+          "green_space_score"
+        ],
+        "title": "NeighborhoodQualityResponse",
+        "type": "object"
+      },
+      "NotificationSettings": {
+        "description": "User notification settings.",
+        "properties": {
+          "email_digest": {
+            "default": true,
+            "title": "Email Digest",
+            "type": "boolean"
+          },
+          "expert_mode": {
+            "default": false,
+            "title": "Expert Mode",
+            "type": "boolean"
+          },
+          "frequency": {
+            "default": "weekly",
+            "title": "Frequency",
+            "type": "string"
+          },
+          "marketing_emails": {
+            "default": false,
+            "title": "Marketing Emails",
+            "type": "boolean"
+          }
+        },
+        "title": "NotificationSettings",
+        "type": "object"
+      },
+      "NotificationsAdminStats": {
+        "properties": {
+          "alerts_storage_path": {
+            "title": "Alerts Storage Path",
+            "type": "string"
+          },
+          "pending_alerts_by_type": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Pending Alerts By Type",
+            "type": "object"
+          },
+          "pending_alerts_newest_created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Alerts Newest Created At"
+          },
+          "pending_alerts_oldest_created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Alerts Oldest Created At"
+          },
+          "pending_alerts_total": {
+            "title": "Pending Alerts Total",
+            "type": "integer"
+          },
+          "scheduler_running": {
+            "title": "Scheduler Running",
+            "type": "boolean"
+          },
+          "sent_alerts_total": {
+            "title": "Sent Alerts Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "scheduler_running",
+          "alerts_storage_path",
+          "sent_alerts_total",
+          "pending_alerts_total"
+        ],
+        "title": "NotificationsAdminStats",
+        "type": "object"
+      },
+      "PointOfInterest": {
+        "description": "Represents a point of interest near a property.",
+        "properties": {
+          "category": {
+            "description": "Category (e.g., school, transport, park)",
+            "title": "Category",
+            "type": "string"
+          },
+          "distance_meters": {
+            "description": "Distance from property in meters",
+            "title": "Distance Meters",
+            "type": "number"
+          },
+          "latitude": {
+            "description": "Latitude coordinate",
+            "title": "Latitude",
+            "type": "number"
+          },
+          "longitude": {
+            "description": "Longitude coordinate",
+            "title": "Longitude",
+            "type": "number"
+          },
+          "name": {
+            "description": "Name of the POI",
+            "title": "Name",
+            "type": "string"
+          },
+          "tags": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Additional OSM tags",
+            "title": "Tags",
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "category",
+          "latitude",
+          "longitude",
+          "distance_meters"
+        ],
+        "title": "PointOfInterest",
+        "type": "object"
+      },
+      "PortalAdapterInfo": {
+        "description": "Information about a portal adapter.",
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "has_api_key": {
+            "default": false,
+            "title": "Has Api Key",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "rate_limit": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Limit"
+          }
+        },
+        "required": [
+          "name",
+          "display_name",
+          "configured"
+        ],
+        "title": "PortalAdapterInfo",
+        "type": "object"
+      },
+      "PortalAdaptersResponse": {
+        "description": "Response model for listing available portal adapters.",
+        "properties": {
+          "adapters": {
+            "items": {
+              "$ref": "#/components/schemas/PortalAdapterInfo"
+            },
+            "title": "Adapters",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "adapters",
+          "count"
+        ],
+        "title": "PortalAdaptersResponse",
+        "type": "object"
+      },
+      "PortalFiltersRequest": {
+        "description": "Request model for portal data fetching with filters.",
+        "properties": {
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "City to search in",
+            "title": "City"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum results to fetch",
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "listing_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "rent",
+            "description": "Listing type (rent, sale)",
+            "title": "Listing Type"
+          },
+          "max_price": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Maximum price filter",
+            "title": "Max Price"
+          },
+          "max_rooms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Maximum number of rooms",
+            "title": "Max Rooms"
+          },
+          "min_price": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Minimum price filter",
+            "title": "Min Price"
+          },
+          "min_rooms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Minimum number of rooms",
+            "title": "Min Rooms"
+          },
+          "portal": {
+            "description": "Portal adapter name (e.g., 'otodom', 'idealista')",
+            "title": "Portal",
+            "type": "string"
+          },
+          "property_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Property type (apartment, house, etc.)",
+            "title": "Property Type"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional source name for tracking (e.g., 'warsaw_rentals')",
+            "title": "Source Name"
+          }
+        },
+        "required": [
+          "portal"
+        ],
+        "title": "PortalFiltersRequest",
+        "type": "object"
+      },
+      "PortalIngestResponse": {
+        "description": "Response model for portal data ingestion.",
+        "properties": {
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "filters_applied": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filters Applied"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "portal": {
+            "title": "Portal",
+            "type": "string"
+          },
+          "properties_processed": {
+            "title": "Properties Processed",
+            "type": "integer"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_type": {
+            "default": "portal",
+            "title": "Source Type",
+            "type": "string"
+          },
+          "success": {
+            "title": "Success",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "portal",
+          "properties_processed"
+        ],
+        "title": "PortalIngestResponse",
+        "type": "object"
+      },
+      "PriceAnalysisRequest": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "PriceAnalysisRequest",
+        "type": "object"
+      },
+      "PriceAnalysisResponse": {
+        "properties": {
+          "average_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Price"
+          },
+          "average_price_per_sqm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Price Per Sqm"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "distribution_by_type": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "default": {},
+            "title": "Distribution By Type",
+            "type": "object"
+          },
+          "max_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price"
+          },
+          "median_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Price"
+          },
+          "median_price_per_sqm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Price Per Sqm"
+          },
+          "min_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query",
+          "count"
+        ],
+        "title": "PriceAnalysisResponse",
+        "type": "object"
+      },
+      "PromptTemplateApplyRequest": {
+        "properties": {
+          "template_id": {
+            "title": "Template Id",
+            "type": "string"
+          },
+          "variables": {
+            "additionalProperties": true,
+            "title": "Variables",
+            "type": "object"
+          }
+        },
+        "required": [
+          "template_id"
+        ],
+        "title": "PromptTemplateApplyRequest",
+        "type": "object"
+      },
+      "PromptTemplateApplyResponse": {
+        "properties": {
+          "rendered_text": {
+            "title": "Rendered Text",
+            "type": "string"
+          },
+          "template_id": {
+            "title": "Template Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "template_id",
+          "rendered_text"
+        ],
+        "title": "PromptTemplateApplyResponse",
+        "type": "object"
+      },
+      "PromptTemplateInfo": {
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "template_text": {
+            "title": "Template Text",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "variables": {
+            "items": {
+              "$ref": "#/components/schemas/PromptTemplateVariableInfo"
+            },
+            "title": "Variables",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "category",
+          "description",
+          "template_text",
+          "variables"
+        ],
+        "title": "PromptTemplateInfo",
+        "type": "object"
+      },
+      "PromptTemplateVariableInfo": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "example": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Example"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "required": {
+            "default": true,
+            "title": "Required",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "PromptTemplateVariableInfo",
+        "type": "object"
+      },
+      "Property": {
+        "additionalProperties": true,
+        "description": "Comprehensive property data model with validation.\n\nThis model represents a real estate property with all relevant details\nfor search, filtering, and display in the application.",
+        "properties": {
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Full street address",
+            "title": "Address"
+          },
+          "area_sqm": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Area in square meters",
+            "title": "Area Sqm"
+          },
+          "bathrooms": {
+            "anyOf": [
+              {
+                "maximum": 20.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": 1.0,
+            "description": "Number of bathrooms",
+            "title": "Bathrooms"
+          },
+          "city": {
+            "description": "City where property is located",
+            "title": "City",
+            "type": "string"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Country where property is located",
+            "title": "Country"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Currency code for price (e.g., PLN, EUR, USD)",
+            "title": "Currency"
+          },
+          "deposit": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Security deposit amount",
+            "title": "Deposit"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Detailed property description",
+            "title": "Description"
+          },
+          "distance_to_clinic": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Distance to nearest clinic (m)",
+            "title": "Distance To Clinic"
+          },
+          "distance_to_restaurant": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Distance to nearest restaurant (m)",
+            "title": "Distance To Restaurant"
+          },
+          "distance_to_school": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Distance to nearest school (m)",
+            "title": "Distance To School"
+          },
+          "distance_to_shopping": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Distance to shopping center (m)",
+            "title": "Distance To Shopping"
+          },
+          "distance_to_transport": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Distance to public transport (m)",
+            "title": "Distance To Transport"
+          },
+          "district": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "City district/borough",
+            "title": "District"
+          },
+          "energy_rating": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Energy efficiency rating (e.g., A, B, C)",
+            "title": "Energy Rating"
+          },
+          "floor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Floor number",
+            "title": "Floor"
+          },
+          "has_balcony": {
+            "default": false,
+            "description": "Has balcony or terrace",
+            "title": "Has Balcony",
+            "type": "boolean"
+          },
+          "has_bike_room": {
+            "default": false,
+            "description": "Has bike storage room",
+            "title": "Has Bike Room",
+            "type": "boolean"
+          },
+          "has_elevator": {
+            "default": false,
+            "description": "Building has elevator",
+            "title": "Has Elevator",
+            "type": "boolean"
+          },
+          "has_garage": {
+            "default": false,
+            "description": "Has garage",
+            "title": "Has Garage",
+            "type": "boolean"
+          },
+          "has_garden": {
+            "default": false,
+            "description": "Has garden or yard",
+            "title": "Has Garden",
+            "type": "boolean"
+          },
+          "has_parking": {
+            "default": false,
+            "description": "Has parking space",
+            "title": "Has Parking",
+            "type": "boolean"
+          },
+          "has_pool": {
+            "default": false,
+            "description": "Has swimming pool",
+            "title": "Has Pool",
+            "type": "boolean"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Unique property identifier",
+            "title": "Id"
+          },
+          "is_furnished": {
+            "default": false,
+            "description": "Is furnished",
+            "title": "Is Furnished",
+            "type": "boolean"
+          },
+          "last_updated": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Last update timestamp",
+            "title": "Last Updated"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Latitude coordinate",
+            "title": "Latitude"
+          },
+          "listing_type": {
+            "$ref": "#/components/schemas/ListingType",
+            "default": "rent",
+            "description": "Listing type: rent/sale/room/sublease"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Longitude coordinate",
+            "title": "Longitude"
+          },
+          "negotiation_rate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NegotiationRate"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Level of price negotiability"
+          },
+          "neighborhood": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Neighborhood or district",
+            "title": "Neighborhood"
+          },
+          "owner_email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Owner contact email",
+            "title": "Owner Email"
+          },
+          "owner_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Property owner name",
+            "title": "Owner Name"
+          },
+          "owner_phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Owner contact phone",
+            "title": "Owner Phone"
+          },
+          "pets_allowed": {
+            "default": false,
+            "description": "Pets are allowed",
+            "title": "Pets Allowed",
+            "type": "boolean"
+          },
+          "points_of_interest": {
+            "description": "Nearby points of interest",
+            "items": {
+              "$ref": "#/components/schemas/PointOfInterest"
+            },
+            "title": "Points Of Interest",
+            "type": "array"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Monthly rental price or listing price",
+            "title": "Price"
+          },
+          "price_delta": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Price variation/negotiation room",
+            "title": "Price Delta"
+          },
+          "price_in_eur": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Price converted to EUR for normalization",
+            "title": "Price In Eur"
+          },
+          "price_media": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Estimated utility costs",
+            "title": "Price Media"
+          },
+          "price_per_sqm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Price per square meter",
+            "title": "Price Per Sqm"
+          },
+          "property_type": {
+            "$ref": "#/components/schemas/PropertyType",
+            "default": "apartment",
+            "description": "Type of property"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Region/State/Voivodeship",
+            "title": "Region"
+          },
+          "rooms": {
+            "anyOf": [
+              {
+                "maximum": 50.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Number of rooms",
+            "title": "Rooms"
+          },
+          "scraped_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When data was scraped",
+            "title": "Scraped At"
+          },
+          "source_platform": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Platform where listing originated",
+            "title": "Source Platform"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Source URL of the listing",
+            "title": "Source Url"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "minLength": 5,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Property title",
+            "title": "Title"
+          },
+          "total_floors": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Total floors in building",
+            "title": "Total Floors"
+          },
+          "total_monthly_cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Total monthly cost (rent + utilities)",
+            "title": "Total Monthly Cost"
+          },
+          "year_built": {
+            "anyOf": [
+              {
+                "maximum": 2030.0,
+                "minimum": 1000.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Year of construction",
+            "title": "Year Built"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "title": "Property",
+        "type": "object"
+      },
+      "PropertyType": {
+        "description": "Enumeration of property types.",
+        "enum": [
+          "apartment",
+          "house",
+          "studio",
+          "loft",
+          "townhouse",
+          "other"
+        ],
+        "title": "PropertyType",
+        "type": "string"
+      },
+      "RagCitation": {
+        "properties": {
+          "chunk_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chunk Index"
+          },
+          "page_number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Number"
+          },
+          "paragraph_number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paragraph Number"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "title": "RagCitation",
+        "type": "object"
+      },
+      "RagQaRequest": {
+        "properties": {
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "question": {
+            "minLength": 1,
+            "title": "Question",
+            "type": "string"
+          },
+          "top_k": {
+            "default": 5,
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Top K",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "title": "RagQaRequest",
+        "type": "object"
+      },
+      "RagQaResponse": {
+        "properties": {
+          "answer": {
+            "title": "Answer",
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/RagCitation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "llm_used": {
+            "default": false,
+            "title": "Llm Used",
+            "type": "boolean"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          }
+        },
+        "required": [
+          "answer"
+        ],
+        "title": "RagQaResponse",
+        "type": "object"
+      },
+      "RagResetResponse": {
+        "properties": {
+          "documents_remaining": {
+            "title": "Documents Remaining",
+            "type": "integer"
+          },
+          "documents_removed": {
+            "title": "Documents Removed",
+            "type": "integer"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "documents_removed",
+          "documents_remaining"
+        ],
+        "title": "RagResetResponse",
+        "type": "object"
+      },
+      "ReindexRequest": {
+        "description": "Request model for reindexing.",
+        "properties": {
+          "clear_existing": {
+            "default": false,
+            "title": "Clear Existing",
+            "type": "boolean"
+          }
+        },
+        "title": "ReindexRequest",
+        "type": "object"
+      },
+      "ReindexResponse": {
+        "description": "Response model for reindexing.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "count"
+        ],
+        "title": "ReindexResponse",
+        "type": "object"
+      },
+      "RequestCodeBody": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "RequestCodeBody",
+        "type": "object"
+      },
+      "SearchRequest": {
+        "description": "Search request model.",
+        "properties": {
+          "alpha": {
+            "default": 0.7,
+            "title": "Alpha",
+            "type": "number"
+          },
+          "filters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filters"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Latitude for geo-search",
+            "title": "Lat"
+          },
+          "limit": {
+            "default": 10,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "lon": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Longitude for geo-search",
+            "title": "Lon"
+          },
+          "max_lat": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bounding box max latitude",
+            "title": "Max Lat"
+          },
+          "max_lon": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bounding box max longitude",
+            "title": "Max Lon"
+          },
+          "min_lat": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bounding box min latitude",
+            "title": "Min Lat"
+          },
+          "min_lon": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bounding box min longitude",
+            "title": "Min Lon"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "radius_km": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Radius in kilometers",
+            "title": "Radius Km"
+          },
+          "sort_by": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SortField"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "relevance"
+          },
+          "sort_order": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SortOrder"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "desc"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "SearchRequest",
+        "type": "object"
+      },
+      "SearchResponse": {
+        "description": "Search response model.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/SearchResultItem"
+            },
+            "title": "Results",
+            "type": "array"
+          }
+        },
+        "required": [
+          "results",
+          "count"
+        ],
+        "title": "SearchResponse",
+        "type": "object"
+      },
+      "SearchResultItem": {
+        "description": "Search result item with score.",
+        "properties": {
+          "property": {
+            "$ref": "#/components/schemas/Property"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "property",
+          "score"
+        ],
+        "title": "SearchResultItem",
+        "type": "object"
+      },
+      "SessionInfo": {
+        "properties": {
+          "session_token": {
+            "title": "Session Token",
+            "type": "string"
+          },
+          "user_email": {
+            "title": "User Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_token",
+          "user_email"
+        ],
+        "title": "SessionInfo",
+        "type": "object"
+      },
+      "SortField": {
+        "enum": [
+          "relevance",
+          "price",
+          "price_per_sqm",
+          "area_sqm",
+          "year_built"
+        ],
+        "title": "SortField",
+        "type": "string"
+      },
+      "SortOrder": {
+        "enum": [
+          "asc",
+          "desc"
+        ],
+        "title": "SortOrder",
+        "type": "string"
+      },
+      "TCOInput": {
+        "description": "Input for Total Cost of Ownership calculator.",
+        "properties": {
+          "annual_insurance": {
+            "default": 0.0,
+            "description": "Annual home insurance",
+            "minimum": 0.0,
+            "title": "Annual Insurance",
+            "type": "number"
+          },
+          "annual_property_tax": {
+            "default": 0.0,
+            "description": "Annual property tax",
+            "minimum": 0.0,
+            "title": "Annual Property Tax",
+            "type": "number"
+          },
+          "down_payment_percent": {
+            "default": 20.0,
+            "description": "Down payment as percentage (e.g., 20 for 20%)",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Down Payment Percent",
+            "type": "number"
+          },
+          "interest_rate": {
+            "default": 4.5,
+            "description": "Annual interest rate as percentage (e.g., 4.5 for 4.5%)",
+            "minimum": 0.0,
+            "title": "Interest Rate",
+            "type": "number"
+          },
+          "loan_years": {
+            "default": 30,
+            "description": "Loan term in years",
+            "exclusiveMinimum": 0.0,
+            "maximum": 50.0,
+            "title": "Loan Years",
+            "type": "integer"
+          },
+          "maintenance_percent": {
+            "default": 1.0,
+            "description": "Annual maintenance as % of property value",
+            "maximum": 5.0,
+            "minimum": 0.0,
+            "title": "Maintenance Percent",
+            "type": "number"
+          },
+          "monthly_hoa": {
+            "default": 0.0,
+            "description": "Monthly HOA/condo fees",
+            "minimum": 0.0,
+            "title": "Monthly Hoa",
+            "type": "number"
+          },
+          "monthly_internet": {
+            "default": 0.0,
+            "description": "Monthly internet/cable",
+            "minimum": 0.0,
+            "title": "Monthly Internet",
+            "type": "number"
+          },
+          "monthly_parking": {
+            "default": 0.0,
+            "description": "Monthly parking cost",
+            "minimum": 0.0,
+            "title": "Monthly Parking",
+            "type": "number"
+          },
+          "monthly_utilities": {
+            "default": 0.0,
+            "description": "Monthly utilities (electric, gas, water)",
+            "minimum": 0.0,
+            "title": "Monthly Utilities",
+            "type": "number"
+          },
+          "property_price": {
+            "description": "Total property price",
+            "exclusiveMinimum": 0.0,
+            "title": "Property Price",
+            "type": "number"
+          }
+        },
+        "required": [
+          "property_price"
+        ],
+        "title": "TCOInput",
+        "type": "object"
+      },
+      "TCOResult": {
+        "description": "Result from Total Cost of Ownership calculator.",
+        "properties": {
+          "annual_hoa": {
+            "title": "Annual Hoa",
+            "type": "number"
+          },
+          "annual_insurance": {
+            "title": "Annual Insurance",
+            "type": "number"
+          },
+          "annual_internet": {
+            "title": "Annual Internet",
+            "type": "number"
+          },
+          "annual_maintenance": {
+            "title": "Annual Maintenance",
+            "type": "number"
+          },
+          "annual_mortgage": {
+            "title": "Annual Mortgage",
+            "type": "number"
+          },
+          "annual_parking": {
+            "title": "Annual Parking",
+            "type": "number"
+          },
+          "annual_property_tax": {
+            "title": "Annual Property Tax",
+            "type": "number"
+          },
+          "annual_tco": {
+            "title": "Annual Tco",
+            "type": "number"
+          },
+          "annual_utilities": {
+            "title": "Annual Utilities",
+            "type": "number"
+          },
+          "breakdown": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Breakdown",
+            "type": "object"
+          },
+          "down_payment": {
+            "title": "Down Payment",
+            "type": "number"
+          },
+          "loan_amount": {
+            "title": "Loan Amount",
+            "type": "number"
+          },
+          "monthly_hoa": {
+            "title": "Monthly Hoa",
+            "type": "number"
+          },
+          "monthly_insurance": {
+            "title": "Monthly Insurance",
+            "type": "number"
+          },
+          "monthly_internet": {
+            "title": "Monthly Internet",
+            "type": "number"
+          },
+          "monthly_maintenance": {
+            "title": "Monthly Maintenance",
+            "type": "number"
+          },
+          "monthly_mortgage": {
+            "title": "Monthly Mortgage",
+            "type": "number"
+          },
+          "monthly_parking": {
+            "title": "Monthly Parking",
+            "type": "number"
+          },
+          "monthly_payment": {
+            "title": "Monthly Payment",
+            "type": "number"
+          },
+          "monthly_property_tax": {
+            "title": "Monthly Property Tax",
+            "type": "number"
+          },
+          "monthly_tco": {
+            "title": "Monthly Tco",
+            "type": "number"
+          },
+          "monthly_utilities": {
+            "title": "Monthly Utilities",
+            "type": "number"
+          },
+          "total_all_costs": {
+            "title": "Total All Costs",
+            "type": "number"
+          },
+          "total_interest": {
+            "title": "Total Interest",
+            "type": "number"
+          },
+          "total_ownership_cost": {
+            "title": "Total Ownership Cost",
+            "type": "number"
+          }
+        },
+        "required": [
+          "monthly_payment",
+          "total_interest",
+          "down_payment",
+          "loan_amount",
+          "monthly_mortgage",
+          "monthly_property_tax",
+          "monthly_insurance",
+          "monthly_hoa",
+          "monthly_utilities",
+          "monthly_internet",
+          "monthly_parking",
+          "monthly_maintenance",
+          "monthly_tco",
+          "annual_mortgage",
+          "annual_property_tax",
+          "annual_insurance",
+          "annual_hoa",
+          "annual_utilities",
+          "annual_internet",
+          "annual_parking",
+          "annual_maintenance",
+          "annual_tco",
+          "total_ownership_cost",
+          "total_all_costs",
+          "breakdown"
+        ],
+        "title": "TCOResult",
+        "type": "object"
+      },
+      "ToolInfo": {
+        "description": "Information about an available tool.",
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "ToolInfo",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "ValuationRequest": {
+        "properties": {
+          "property_id": {
+            "title": "Property Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id"
+        ],
+        "title": "ValuationRequest",
+        "type": "object"
+      },
+      "ValuationResponse": {
+        "properties": {
+          "estimated_value": {
+            "title": "Estimated Value",
+            "type": "number"
+          },
+          "property_id": {
+            "title": "Property Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id",
+          "estimated_value"
+        ],
+        "title": "ValuationResponse",
+        "type": "object"
+      },
+      "VerifyCodeBody": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "code"
+        ],
+        "title": "VerifyCodeBody",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "in": "header",
+        "name": "X-API-Key",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "AI Real Estate Assistant API V4",
+    "title": "AI Real Estate Assistant - Modern",
+    "version": "3.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/admin/excel/sheets": {
+      "post": {
+        "description": "Get sheet names from an Excel file.\n\nReturns available sheets and their row counts for sheet selection UI.",
+        "operationId": "get_excel_sheets_api_v1_admin_excel_sheets_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExcelSheetsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExcelSheetsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Get Excel Sheets",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/health": {
+      "get": {
+        "description": "Detailed health check for admin.",
+        "operationId": "admin_health_check_api_v1_admin_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheck"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Admin Health Check",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/ingest": {
+      "post": {
+        "description": "Trigger data ingestion from URLs.\nDownloads CSV/Excel files, processes them, and saves to local cache.\nDoes NOT automatically reindex vector store (call /reindex for that).\nEnforces max_properties limit from settings.",
+        "operationId": "ingest_data_api_v1_admin_ingest_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Ingest Data",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics": {
+      "get": {
+        "description": "Return simple API metrics.",
+        "operationId": "admin_metrics_api_v1_admin_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Admin Metrics Api V1 Admin Metrics Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Admin Metrics",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/notifications-stats": {
+      "get": {
+        "operationId": "admin_notifications_stats_api_v1_admin_notifications_stats_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationsAdminStats"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Admin Notifications Stats",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/portals": {
+      "get": {
+        "description": "List all available portal adapters.\n\nReturns information about each portal including:\n- Whether it's configured (has API key if required)\n- Rate limit information",
+        "operationId": "list_portals_api_v1_admin_portals_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalAdaptersResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "List Portals",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/portals/fetch": {
+      "post": {
+        "description": "Fetch property data from an external portal.\n\nUses the specified portal adapter to fetch properties based on filters.\nThe fetched data is automatically ingested into the property cache.",
+        "operationId": "fetch_from_portal_api_v1_admin_portals_fetch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PortalFiltersRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalIngestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Fetch From Portal",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/reindex": {
+      "post": {
+        "description": "Reindex data from cache to vector store.",
+        "operationId": "reindex_data_api_v1_admin_reindex_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReindexRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReindexResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Reindex Data",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/version": {
+      "get": {
+        "operationId": "admin_version_info_api_v1_admin_version_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminVersionInfo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Admin Version Info",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/auth/request-code": {
+      "post": {
+        "operationId": "request_code_api_v1_auth_request_code_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCodeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Request Code Api V1 Auth Request Code Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Request Code",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/session": {
+      "get": {
+        "operationId": "get_session_api_v1_auth_session_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Session-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Session",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/verify-code": {
+      "post": {
+        "operationId": "verify_code_api_v1_auth_verify_code_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyCodeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Verify Code",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/chat": {
+      "post": {
+        "description": "Process a chat message using the hybrid agent with session persistence.",
+        "operationId": "chat_endpoint_api_v1_chat_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-User-Email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Email"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Chat Endpoint",
+        "tags": [
+          "Chat"
+        ]
+      }
+    },
+    "/api/v1/export/properties": {
+      "post": {
+        "operationId": "export_properties_api_v1_export_properties_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportPropertiesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Export Properties",
+        "tags": [
+          "Export",
+          "Export"
+        ]
+      }
+    },
+    "/api/v1/prompt-templates": {
+      "get": {
+        "operationId": "list_prompt_templates_api_v1_prompt_templates_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PromptTemplateInfo"
+                  },
+                  "title": "Response List Prompt Templates Api V1 Prompt Templates Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "List Prompt Templates",
+        "tags": [
+          "Prompt Templates"
+        ]
+      }
+    },
+    "/api/v1/prompt-templates/apply": {
+      "post": {
+        "operationId": "apply_prompt_template_api_v1_prompt_templates_apply_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptTemplateApplyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptTemplateApplyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Apply Prompt Template",
+        "tags": [
+          "Prompt Templates"
+        ]
+      }
+    },
+    "/api/v1/rag/qa": {
+      "post": {
+        "description": "Simple QA over uploaded knowledge with citations.\nIf LLM is unavailable, returns concatenated context as answer.",
+        "operationId": "rag_qa_api_v1_rag_qa_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "question",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Question"
+            }
+          },
+          {
+            "in": "query",
+            "name": "top_k",
+            "required": false,
+            "schema": {
+              "default": 5,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Top K",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "provider",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Provider"
+            }
+          },
+          {
+            "in": "query",
+            "name": "model",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Model"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-User-Email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Email"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RagQaRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Payload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RagQaResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Rag Qa",
+        "tags": [
+          "RAG"
+        ]
+      }
+    },
+    "/api/v1/rag/reset": {
+      "post": {
+        "description": "Clear all indexed knowledge documents for local RAG (CE-safe).",
+        "operationId": "reset_rag_knowledge_api_v1_rag_reset_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RagResetResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Reset Rag Knowledge",
+        "tags": [
+          "RAG"
+        ]
+      }
+    },
+    "/api/v1/rag/upload": {
+      "post": {
+        "description": "Upload documents and index for local RAG (CE-safe).\nPDF/DOCX require optional dependencies; unsupported types return a 422 when nothing is indexed.",
+        "operationId": "upload_documents_api_v1_rag_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_documents_api_v1_rag_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Upload Documents",
+        "tags": [
+          "RAG"
+        ]
+      }
+    },
+    "/api/v1/search": {
+      "post": {
+        "description": "Search for properties using semantic search and metadata filters.",
+        "operationId": "search_properties_api_v1_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Search Properties",
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/api/v1/settings/model-preferences": {
+      "get": {
+        "operationId": "get_model_preferences_api_v1_settings_model_preferences_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "user_email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Email"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-User-Email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelPreferences"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Get Model Preferences",
+        "tags": [
+          "Settings"
+        ]
+      },
+      "put": {
+        "operationId": "update_model_preferences_api_v1_settings_model_preferences_put",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "user_email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Email"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-User-Email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Email"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelPreferencesUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelPreferences"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Update Model Preferences",
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/v1/settings/models": {
+      "get": {
+        "description": "List available model providers and their models.",
+        "operationId": "list_model_catalog_api_v1_settings_models_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ModelProviderCatalog"
+                  },
+                  "title": "Response List Model Catalog Api V1 Settings Models Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "List Model Catalog",
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/v1/settings/notifications": {
+      "get": {
+        "description": "Get notification settings for the current user.",
+        "operationId": "get_notification_settings_api_v1_settings_notifications_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "user_email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Email"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-User-Email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationSettings"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Get Notification Settings",
+        "tags": [
+          "Settings"
+        ]
+      },
+      "put": {
+        "description": "Update notification settings for the current user.",
+        "operationId": "update_notification_settings_api_v1_settings_notifications_put",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "user_email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Email"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-User-Email",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Email"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationSettings"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationSettings"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Update Notification Settings",
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/v1/settings/test-runtime": {
+      "get": {
+        "description": "Test connection/runtime status for a specific provider.",
+        "operationId": "test_runtime_api_v1_settings_test_runtime_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "title": "Provider",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelRuntimeTestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Test Runtime",
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/v1/tools": {
+      "get": {
+        "description": "List available tools.",
+        "operationId": "list_tools_api_v1_tools_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ToolInfo"
+                  },
+                  "title": "Response List Tools Api V1 Tools Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "List Tools",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/commute-ranking": {
+      "post": {
+        "description": "Rank multiple properties by commute time to a destination.\n\nCompares commute times from multiple properties to a common destination\nand returns a ranked list from shortest to longest commute.",
+        "operationId": "commute_ranking_api_v1_tools_commute_ranking_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommuteRankingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommuteRankingResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Commute Ranking",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/commute-time": {
+      "post": {
+        "description": "Calculate commute time from a property to a destination.\n\nUses Google Routes API to calculate accurate commute times including\nreal-time traffic conditions and transit schedules.",
+        "operationId": "commute_time_analysis_api_v1_tools_commute_time_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommuteTimeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommuteTimeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Commute Time Analysis",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/compare-properties": {
+      "post": {
+        "operationId": "compare_properties_api_v1_tools_compare_properties_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComparePropertiesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComparePropertiesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Compare Properties",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/crm-sync-contact": {
+      "post": {
+        "operationId": "crm_sync_contact_api_v1_tools_crm_sync_contact_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CRMContactRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CRMContactResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Crm Sync Contact",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/enrich-address": {
+      "post": {
+        "operationId": "enrich_address_api_v1_tools_enrich_address_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataEnrichmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataEnrichmentResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Enrich Address",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/investment-analysis": {
+      "post": {
+        "description": "Calculate investment property metrics including ROI, cap rate, cash flow, and rental yield.",
+        "operationId": "calculate_investment_analysis_api_v1_tools_investment_analysis_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvestmentAnalysisInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvestmentAnalysisResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Calculate Investment Analysis",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/legal-check": {
+      "post": {
+        "operationId": "legal_check_api_v1_tools_legal_check_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalCheckResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Legal Check",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/location-analysis": {
+      "post": {
+        "operationId": "location_analysis_api_v1_tools_location_analysis_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationAnalysisResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Location Analysis",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/mortgage-calculator": {
+      "post": {
+        "description": "Calculate mortgage payments.",
+        "operationId": "calculate_mortgage_api_v1_tools_mortgage_calculator_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MortgageInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MortgageResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Calculate Mortgage",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/neighborhood-quality": {
+      "post": {
+        "description": "Calculate neighborhood quality index including safety, schools, amenities, walkability, and green space.",
+        "operationId": "neighborhood_quality_api_v1_tools_neighborhood_quality_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeighborhoodQualityInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeighborhoodQualityResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Neighborhood Quality",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/price-analysis": {
+      "post": {
+        "operationId": "price_analysis_api_v1_tools_price_analysis_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceAnalysisResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Price Analysis",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/tco-calculator": {
+      "post": {
+        "description": "Calculate Total Cost of Ownership for a property.\nIncludes mortgage, property taxes, insurance, HOA fees, utilities, maintenance, and parking.",
+        "operationId": "calculate_tco_api_v1_tools_tco_calculator_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TCOInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TCOResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Calculate Tco",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/tools/valuation": {
+      "post": {
+        "operationId": "valuation_api_v1_tools_valuation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValuationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValuationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Valuation",
+        "tags": [
+          "Tools"
+        ]
+      }
+    },
+    "/api/v1/verify-auth": {
+      "get": {
+        "description": "Verify API key authentication.",
+        "operationId": "verify_auth_api_v1_verify_auth_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "summary": "Verify Auth",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Health check endpoint to verify API status.\n\nArgs:\n    include_dependencies: Whether to check dependency health (vector store, Redis, LLM providers)\n\nReturns:\n    Comprehensive health status including dependencies",
+        "operationId": "health_check_health_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include_dependencies",
+            "required": false,
+            "schema": {
+              "default": true,
+              "title": "Include Dependencies",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Health Check",
+        "tags": [
+          "System"
+        ]
+      }
+    },
+    "/metrics": {
+      "get": {
+        "description": "Prometheus-compatible metrics endpoint (TASK-017).\n\nReturns application metrics in Prometheus text format.",
+        "operationId": "metrics_endpoint_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Metrics Endpoint",
+        "tags": [
+          "System"
+        ]
+      }
+    }
+  }
+}

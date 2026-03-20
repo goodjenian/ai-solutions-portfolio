@@ -1,0 +1,35 @@
+# GPU variant of docker-compose.yml
+# Extends the base compose file to enable GPU support for Ollama
+#
+# ⚠️ LOCAL DEVELOPMENT ONLY ⚠️
+# This configuration is ONLY for local Docker Desktop with NVIDIA GPU support.
+# It is NOT compatible with:
+#   - Kubernetes deployments (use k8s/ manifests with nvidia.com/gpu resources)
+#   - Vertex AI (use Vertex AI GPU configuration)
+#   - Vercel serverless (no GPU support)
+#
+# **IMPORTANT:** This is an ADVANCED configuration. Most users should use
+# external AI providers (OpenAI, Anthropic, Google) instead of local Ollama.
+#
+# Requirements:
+#   - Docker Desktop with NVIDIA Container Toolkit
+#   - NVIDIA GPU driver installed
+#   - Windows/Linux host (not Mac)
+#
+# Usage:
+#   docker compose -f deploy/compose/docker-compose.yml -f deploy/compose/docker-compose.gpu.yml --profile local-llm up -d
+
+services:
+  # Override ollama service to enable GPU by default
+  ollama:
+    profiles: []  # Remove profile so it starts with GPU enabled
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # The ollama_gpu service from base compose is still available
+  # but now the main ollama service also has GPU support

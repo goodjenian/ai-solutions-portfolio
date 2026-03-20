@@ -1,0 +1,177 @@
+title = "Gitleaks Configuration for AI Real Estate Assistant"
+
+# Extend the default base configuration
+[extend]
+useDefault = true
+
+# Allowlist - paths and patterns to exclude from scanning
+[allowlist]
+description = "Global allowlist for tests, build outputs, and example configs"
+
+# Paths to exclude from scanning
+paths = [
+    '''\.gitleaks\.toml''',
+    '''\.env\.example''',
+    '''\.env\.template''',
+    '''\.pre-commit-config\.yaml''',
+    '''tests/.*''',
+    '''tests/.*\.py''',
+    '''tests/.*\.ts''',
+    '''tests/.*\.tsx''',
+    '''tests/.*\.js''',
+    '''tests/.*\.*fixture.*''',
+    '''test_.*\.py''',
+    '''_test\.go''',
+    '''\.test\.ts''',
+    '''\.test\.tsx''',
+    '''\.spec\.ts''',
+    '''\.spec\.tsx''',
+    '''\.spec\.js''',
+    '''\.git/.*''',
+    '''\.venv/.*''',
+    '''venv/.*''',
+    '''node_modules/.*''',
+    '''\.next/.*''',
+    '''\.vscode/.*''',
+    '''\.idea/.*''',
+    '''coverage/.*''',
+    '''\.coverage''',
+    '''artifacts/.*''',
+    '''dist/.*''',
+    '''build/.*''',
+]
+
+regexes = [
+    '''your-api-key''',
+]
+
+# Custom rules for project-specific secrets
+[[rules]]
+description = "Generic API Key with common prefixes"
+id = "generic-api-key"
+regex = '''(?i)(?:api[_-]?key|apikey|secret[_-]?key|access[_-]?token|auth[_-]?token|private[_-]?key|client[_-]?secret)\s*[:=]\s*['\"]?([a-zA-Z0-9_-]{32,})['\"]?'''
+secretGroup = 1
+entropy = 3.5
+keywords = [
+    "api_key","apikey","api-key","secret","access_token","auth_token",
+    "private_key","client_secret","client-secret",
+]
+
+[[rules]]
+description = "OpenAI API Key"
+id = "openai-api-key"
+regex = '''(?i)sk-(proj-)?([a-z0-9]{48})'''
+secretGroup = 2
+keywords = ["sk-proj", "sk-"]
+
+[[rules]]
+description = "Anthropic API Key"
+id = "anthropic-api-key"
+regex = '''(?i)sk-ant-([a-z0-9]{95})'''
+secretGroup = 1
+keywords = ["sk-ant-"]
+
+[[rules]]
+description = "Google AI API Key"
+id = "google-api-key"
+regex = '''(?i)(AIza[a-zA-Z0-9_\-]{35})'''
+secretGroup = 1
+keywords = ["AIza"]
+
+[[rules]]
+description = "GitHub Personal Access Token"
+id = "github-pat"
+regex = '''(ghp|gho|ghu|ghs|ghr)_([a-zA-Z0-9]{36})'''
+secretGroup = 2
+keywords = ["ghp_", "gho_", "ghu_", "ghs_", "ghr_"]
+
+[[rules]]
+description = "GitHub OAuth App Token"
+id = "github-oauth"
+regex = '''(gho|ghu)_([a-zA-Z0-9]{36})'''
+secretGroup = 2
+keywords = ["gho_", "ghu_"]
+
+[[rules]]
+description = "AWS Access Key ID"
+id = "aws-access-key"
+regex = '''(?i)(AKIA[0-9A-Z]{16})'''
+entropy = 0
+secretGroup = 1
+keywords = ["AKIA"]
+
+[[rules]]
+description = "AWS Secret Access Key"
+id = "aws-secret-key"
+regex = '''(?i)aws.*secret.*access.*key\s*[:=]\s*['\"]?([a-z0-9/+]{40})['\"]?'''
+secretGroup = 1
+entropy = 4
+keywords = ["aws", "secret", "access", "key"]
+
+[[rules]]
+description = "Stripe API Key"
+id = "stripe-api-key"
+regex = '''(?i)(sk_live_[0-9a-zA-Z]{24,})'''
+secretGroup = 1
+keywords = ["sk_live_"]
+
+[[rules]]
+description = "Stripe Test Key (allowlisted for tests)"
+id = "stripe-test-key"
+regex = '''(?i)(sk_test_[0-9a-zA-Z]{24,})'''
+secretGroup = 1
+keywords = ["sk_test_"]
+# Allow test keys in test files only - handled by path allowlist
+
+[[rules]]
+description = "Slack Token"
+id = "slack-token"
+regex = '''(xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9a-zA-Z]{24,})'''
+secretGroup = 1
+keywords = ["xoxb-", "xoxp-", "xoxa-", "xoxr-", "xoxs-"]
+
+[[rules]]
+description = "Slack Webhook"
+id = "slack-webhook"
+regex = '''(https://hooks\.slack\.com/services/T[0-9A-Z]{8}/B[0-9A-Z]{8,}/[a-zA-Z0-9]{24})'''
+secretGroup = 1
+keywords = ["hooks.slack.com"]
+
+[[rules]]
+description = "Database Connection String (PostgreSQL, MySQL, MongoDB)"
+id = "database-connection-string"
+regex = '''(?i)((?:postgresql|mysql|mongodb|redis)://[^\s/$.?#].[^\s]*:[^\s/$.?#].[^\s]*@)'''
+secretGroup = 1
+keywords = ["postgresql://", "mysql://", "mongodb://", "redis://"]
+
+[[rules]]
+description = "JWT Token"
+id = "jwt-token"
+regex = '''(eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*)'''
+secretGroup = 1
+entropy = 4
+
+[[rules]]
+description = "Private Key (RSA, EC, etc.)"
+id = "private-key"
+regex = '''(-----BEGIN[ A-Z]*PRIVATE KEY-----)'''
+secretGroup = 1
+keywords = ["BEGIN", "PRIVATE", "KEY"]
+
+[[rules]]
+description = "Dotenv file with secrets"
+id = "dotenv-secrets"
+regex = '''(?i)\.env$'''
+# Handled by path allowlist - exclude .env.example
+
+# Allow specific commits or branches if needed
+[allowlist.commitMessages]
+description = "Allowlist commits by message regex"
+regexes = [
+    '''(?i)chore:? update? example.*''',
+    '''(?i)docs:? update? documentation.*''',
+    '''(?i)test:? add? test? secrets?''',
+]
+
+# Note: To allowlist by commit author, add authors to the regexes section above
+# Example: '''Author: dependabot\[bot\]'''

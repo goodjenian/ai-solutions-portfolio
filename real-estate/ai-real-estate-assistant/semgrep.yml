@@ -1,0 +1,191 @@
+# Semgrep Configuration for AI Real Estate Assistant
+# Runs SAST (Static Application Security Testing) on Python and JavaScript/TypeScript
+
+# Auto-rules from Semgrep registry - enables maintained rule sets
+rules:
+  # ===== Python Security Rules =====
+
+  # OWASP Top 10 for Python
+  - id: python.jwt.best-practice
+    patterns:
+      - pattern: jwt.encode(...)
+      - metavariable-pattern:
+          metavariable: $ALG
+          patterns:
+            - pattern: $ALG="none"
+    message: "JWT algorithm 'none' is insecure and allows token forgery"
+    severity: ERROR
+    languages: [python]
+
+  # Dangerous function usage
+  - id: python.dangerous-functions
+    pattern-either:
+      - pattern: eval($USER_INPUT)
+      - pattern: exec($USER_INPUT)
+      - pattern: __import__($USER_INPUT)
+      - pattern: os.system($USER_INPUT)
+      - pattern: subprocess.call($USER_INPUT, shell=True)
+      - pattern: subprocess.Popen($USER_INPUT, shell=True)
+    message: "Dangerous function executed with user input - code execution risk"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      technology:
+        - python
+      cwe: "CWE-78: OS Command Injection"
+      owasp: "A03:2021 - Injection"
+
+  # Hardcoded secrets - more specific patterns to reduce false positives
+  - id: python.hardcoded-secrets
+    pattern-either:
+      - pattern: |
+          $PASSWORD = "=~.*(sk_|pk_|api_|secret_|token_|auth_).+"
+      - pattern: |
+          $API_KEY = "=~.*(sk_|pk_|api_|secret_|token_|auth_).+"
+      - pattern: |
+          $SECRET = "=~.*(sk_|pk_|api_|secret_|token_|auth_).+"
+      - pattern: |
+          $TOKEN = "=~.*(sk_|pk_|api_|secret_|token_|auth_).+"
+    message: "Hardcoded secret detected - use environment variables"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      category: security
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+
+  # SQL Injection
+  - id: python.sql-injection
+    pattern-either:
+      - pattern: |
+          $CONN.execute($QUERY % $INPUT)
+      - pattern: |
+          $CONN.execute("$QUERY " + $INPUT)
+      - pattern: |
+          $CONN.execute(f"$QUERY{$INPUT}")
+    message: "Possible SQL injection - use parameterized queries"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      cwe: "CWE-89: SQL Injection"
+      owasp: "A03:2021 - Injection"
+
+  # FastAPI-specific issues
+  - id: fastapi.cors-wildcard
+    pattern: CORSMiddleware(allow_origins=["*"], ...)
+    message: "CORS configured with wildcard origins - allows any domain"
+    severity: WARNING
+    languages: [python]
+
+  # LangChain prompt injection
+  - id: langchain.prompt-injection
+    pattern-either:
+      - pattern: PromptTemplate(template=$USER_INPUT + "...")
+      - pattern: PromptTemplate.from_template($USER_INPUT)
+    message: "User input directly in prompt template - potential prompt injection"
+    severity: WARNING
+    languages: [python]
+
+  # ===== JavaScript/TypeScript Security Rules =====
+
+  # eval in JavaScript
+  - id: javascript.eval
+    pattern: eval($INPUT)
+    message: "eval() is dangerous and can lead to code injection"
+    severity: ERROR
+    languages: [javascript, typescript]
+    metadata:
+      cwe: "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code"
+
+  # dangerouslySetInnerHTML in React
+  - id: react.dangerous-inner-html
+    pattern: dangerouslySetInnerHTML={...}
+    message: "dangerouslySetInnerHTML can lead to XSS vulnerabilities"
+    severity: WARNING
+    languages: [javascript, typescript]
+    metadata:
+      cwe: "CWE-79: Cross-site Scripting"
+      owasp: "A03:2021 - Injection"
+
+  # Hardcoded secrets in JS/TS - more specific to reduce false positives
+  - id: javascript.hardcoded-secrets
+    pattern-either:
+      - pattern: |
+          const $SECRET = "=~.*(sk_|pk_|api_|secret_|token_|auth_|password_|key_).+"
+      - pattern: |
+          $API_KEY = "=~.*(sk_|pk_|api_|secret_|token_|auth_|password_|key_).+"
+      - pattern: |
+          process.env.$KEY = "=~.*(sk_|pk_|api_|secret_|token_|auth_|password_|key_).+"
+    message: "Hardcoded secret in frontend code - secrets should be on backend only"
+    severity: WARNING
+    languages: [javascript, typescript]
+
+  # localStorage with sensitive data
+  - id: javascript.sensitive-localstorage
+    pattern-either:
+      - pattern: localStorage.setItem("password", $VALUE)
+      - pattern: localStorage.setItem("token", $VALUE)
+      - pattern: localStorage.setItem("api_key", $VALUE)
+    message: "Storing sensitive data in localStorage is vulnerable to XSS"
+    severity: WARNING
+    languages: [javascript, typescript]
+
+  # ===== Common Security Issues =====
+
+  # Weak cryptography
+  - id: weak-cryptography.md5
+    pattern-either:
+      - pattern: hashlib.md5(...)
+      - pattern: crypto.createHash('md5', ...)
+    message: "MD5 is a weak hash algorithm - use SHA-256 or better"
+    severity: WARNING
+    languages: [python, javascript, typescript]
+    metadata:
+      cwe: "CWE-327: Use of a Broken or Risky Cryptographic Algorithm"
+
+  # Weak random
+  - id: weak-random.random
+    pattern-either:
+      - pattern: random.random(...)
+      - pattern: Math.random()
+    message: "Weak random generator - use secrets.token_hex() or crypto.randomBytes() for security"
+    severity: WARNING
+    languages: [python, javascript, typescript]
+
+  # Tempfile issues
+  - id: python.insecure-tempfile
+    pattern-either:
+      - pattern: mktemp(...)
+      - pattern: tempfile.mktemp(...)
+    message: "Insecure temporary file creation - use tempfile.mkstemp() instead"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      cwe: "CWE-377: Insecure Temporary File"
+
+# Configuration options
+extends:
+  # Enable additional rule sets from Semgrep registry
+  - uses: security
+  - uses: bandit
+  - uses: eslint
+
+# Exclude paths from scanning
+exclude:
+  - node_modules/
+  - venv/
+  - .venv/
+  - .venv_ci/
+  - __pycache__/
+  - .next/
+  - dist/
+  - build/
+  - coverage/
+  - "*.test.js"
+  - "*.test.ts"
+  - "*.test.tsx"
+  - "*.spec.js"
+  - "*.spec.ts"
+  - "*.spec.tsx"
+  - "tests/"
+  - "test_*.py"

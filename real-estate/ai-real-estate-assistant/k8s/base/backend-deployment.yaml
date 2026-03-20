@@ -1,0 +1,205 @@
+# Base Kubernetes Deployment for AI Real Estate Assistant Backend
+# (TASK-017: Production Deployment Optimization)
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  labels:
+    app: ai-real-estate-backend
+data:
+  ENVIRONMENT: "production"
+  CACHE_ENABLED: "true"
+  CACHE_TTL_SECONDS: "300"
+  METRICS_ENABLED: "true"
+  API_RATE_LIMIT_ENABLED: "true"
+  API_RATE_LIMIT_RPM: "600"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: ai-real-estate-backend
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-real-estate-backend
+  template:
+    metadata:
+      labels:
+        app: ai-real-estate-backend
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Graceful shutdown configuration
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: backend
+        image: ghcr.io/your-org/ai-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        - name: metrics
+          containerPort: 8000
+          protocol: TCP
+        env:
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: ENVIRONMENT
+        - name: CACHE_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: CACHE_ENABLED
+        - name: CACHE_TTL_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: CACHE_TTL_SECONDS
+        - name: METRICS_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: METRICS_ENABLED
+        - name: API_RATE_LIMIT_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: API_RATE_LIMIT_ENABLED
+        - name: API_RATE_LIMIT_RPM
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: API_RATE_LIMIT_RPM
+        - name: REDIS_URL
+          value: "redis://redis:6379"
+        - name: API_ACCESS_KEYS
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: API_ACCESS_KEYS
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: OPENAI_API_KEY
+              optional: true
+        - name: ANTHROPIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: ANTHROPIC_API_KEY
+              optional: true
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: GOOGLE_API_KEY
+              optional: true
+        # Connection pool settings
+        - name: DB_POOL_SIZE
+          value: "10"
+        - name: DB_MAX_OVERFLOW
+          value: "20"
+        - name: DB_POOL_TIMEOUT_SECONDS
+          value: "30"
+        # Graceful shutdown
+        - name: SHUTDOWN_DRAIN_SECONDS
+          value: "30"
+        - name: SHUTDOWN_MAX_WAIT_SECONDS
+          value: "60"
+        # Resource limits for production
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        # Lifecycle hooks for graceful shutdown
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]
+        volumeMounts:
+        - name: chroma-data
+          mountPath: /app/chroma_db
+        - name: app-data
+          mountPath: /app/data
+      volumes:
+      - name: chroma-data
+        persistentVolumeClaim:
+          claimName: chroma-pvc
+      - name: app-data
+        emptyDir: {}
+      # Affinity rules for high availability
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - ai-real-estate-backend
+              topologyKey: kubernetes.io/hostname
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: ai-real-estate-backend
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: ai-real-estate-backend
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chroma-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard

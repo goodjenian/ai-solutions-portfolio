@@ -1,0 +1,394 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { Send, User, Bot, Loader2, Lightbulb, Sparkles, RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { streamChatMessage, ApiError } from "@/lib/api";
+import type { ChatResponse } from "@/lib/types";
+import { extractSourceTitle, formatMetadataInline, truncateText } from "@/lib/chatSources";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  sources?: ChatResponse["sources"];
+  sourcesTruncated?: boolean;
+  intermediateSteps?: ChatResponse["intermediate_steps"];
+  isError?: boolean;
+  requestId?: string;
+}
+
+// Suggested prompts for empty state
+const SUGGESTED_PROMPTS = [
+  "Find 2-bedroom apartments under $400,000 in Madrid",
+  "What's the average price per square meter in Krakow?",
+  "Compare properties in Warsaw city center",
+  "Calculate mortgage for a $500,000 property with 20% down payment",
+  "Show me houses with gardens in suburban areas",
+];
+
+export default function ChatPage() {
+  // Track if user has sent any message (for empty state)
+  const [hasStarted, setHasStarted] = useState(false);
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+  const [lastUserMessage, setLastUserMessage] = useState<string | undefined>(undefined);
+  const [debugMode, setDebugMode] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const applyStreamError = (error: unknown, isRetry: boolean = false) => {
+    let message = "Unknown error";
+    let requestId: string | undefined = undefined;
+
+    if (error instanceof ApiError) {
+      message = error.message;
+      requestId = error.request_id;
+    } else if (error instanceof Error) {
+      message = error.message;
+      // Try to extract request_id from error message
+      const match = message.match(/request_id=([A-Za-z0-9_-]+)/i);
+      if (match && match[1]) {
+        requestId = match[1];
+      }
+    }
+
+    setMessages(prev => {
+      const updated = [...prev];
+      const lastIdx = updated.length - 1;
+
+      if (isRetry) {
+        // Replace the temporary loading message with error
+        if (lastIdx >= 0 && updated[lastIdx].role === "assistant" && !updated[lastIdx].content) {
+          updated[lastIdx] = {
+            ...updated[lastIdx],
+            content: `I apologize, but I encountered an error: ${message}. Please try again.`,
+            isError: true,
+            requestId,
+          };
+          return updated;
+        }
+      }
+
+      return [
+        ...updated,
+        {
+          role: "assistant",
+          content: `I apologize, but I encountered an error: ${message}. Please try again.`,
+          isError: true,
+          requestId,
+        },
+      ];
+    });
+  };
+
+  const handleSuggestedPrompt = (prompt: string) => {
+    setInput(prompt);
+    setTimeout(() => {
+      formRef.current?.requestSubmit();
+    }, 100);
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    setDebugMode(params.get("debug") === "1");
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage = input.trim();
+    setInput("");
+    setHasStarted(true);
+    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    setIsLoading(true);
+    setLastUserMessage(userMessage);
+
+    try {
+      const sid = sessionId ?? (typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : undefined);
+      if (sid && !sessionId) {
+        setSessionId(sid);
+      }
+
+      // Add empty assistant message that will be filled with streamed content
+      setMessages(prev => [...prev, { role: "assistant", content: "" }]);
+
+      await streamChatMessage(
+        { message: userMessage, session_id: sid, include_intermediate_steps: debugMode },
+        (chunk) => {
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastIdx = updated.length - 1;
+            if (lastIdx >= 0 && updated[lastIdx].role === "assistant") {
+              updated[lastIdx] = { ...updated[lastIdx], content: updated[lastIdx].content + chunk };
+            }
+            return updated;
+          });
+        },
+        () => {
+          // requestId is available but not currently displayed
+        },
+        ({ sources, sourcesTruncated, sessionId: returnedSessionId, intermediateSteps }) => {
+          if (returnedSessionId && !sessionId) setSessionId(returnedSessionId);
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastIdx = updated.length - 1;
+            if (lastIdx >= 0 && updated[lastIdx].role === "assistant") {
+              updated[lastIdx] = {
+                ...updated[lastIdx],
+                sources: sources && sources.length ? sources : updated[lastIdx].sources,
+                sourcesTruncated: typeof sourcesTruncated === "boolean" ? sourcesTruncated : updated[lastIdx].sourcesTruncated,
+                intermediateSteps: intermediateSteps && intermediateSteps.length ? intermediateSteps : updated[lastIdx].intermediateSteps,
+              };
+            }
+            return updated;
+          });
+        }
+      );
+
+    } catch (error) {
+      applyStreamError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRetry = async () => {
+    if (!lastUserMessage || isLoading) return;
+    setIsLoading(true);
+    setMessages(prev => [...prev, { role: "assistant", content: "" }]);
+
+    try {
+      await streamChatMessage(
+        { message: lastUserMessage, session_id: sessionId, include_intermediate_steps: debugMode },
+        (chunk) => {
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastIdx = updated.length - 1;
+            if (lastIdx >= 0 && updated[lastIdx].role === "assistant") {
+              updated[lastIdx] = { ...updated[lastIdx], content: updated[lastIdx].content + chunk };
+            }
+            return updated;
+          });
+        },
+        () => {
+          // requestId is available but not currently displayed
+        },
+        ({ sources, sourcesTruncated, intermediateSteps }) => {
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastIdx = updated.length - 1;
+            if (lastIdx >= 0 && updated[lastIdx].role === "assistant") {
+              updated[lastIdx] = {
+                ...updated[lastIdx],
+                sources: sources && sources.length ? sources : updated[lastIdx].sources,
+                sourcesTruncated: typeof sourcesTruncated === "boolean" ? sourcesTruncated : updated[lastIdx].sourcesTruncated,
+                intermediateSteps: intermediateSteps && intermediateSteps.length ? intermediateSteps : updated[lastIdx].intermediateSteps,
+              };
+            }
+            return updated;
+          });
+        }
+      );
+    } catch (error) {
+      applyStreamError(error, true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="container mx-auto max-w-4xl p-4 h-[calc(100vh-4rem)] flex flex-col">
+      {/* Messages Area - 4 Mandated States */}
+      <div className="flex-1 overflow-y-auto space-y-4 p-4 rounded-lg border bg-card shadow-sm mb-4">
+        {/* STATE 1: Empty state (zero-data) - before user starts */}
+        {!hasStarted && messages.length === 0 && (
+          <div
+            className="flex flex-col items-center justify-center h-full min-h-[400px] text-center"
+            role="status"
+            aria-live="polite"
+          >
+            <div className="p-4 rounded-full bg-primary/10 mb-4">
+              <Sparkles className="h-12 w-12 text-primary" aria-hidden="true" />
+            </div>
+            <h1 className="text-2xl font-bold mb-2">AI Real Estate Assistant</h1>
+            <p className="text-muted-foreground max-w-md mb-6">
+              Ask me anything about properties, market trends, investment advice, or calculations.
+              I can search listings, analyze prices, and help you make informed decisions.
+            </p>
+            <div className="space-y-2 mb-6 text-left w-full max-w-md mx-auto">
+              <p className="text-sm font-medium text-foreground flex items-center gap-2">
+                <Lightbulb className="h-4 w-4" aria-hidden="true" />
+                Try these examples:
+              </p>
+              <div className="flex flex-col gap-2">
+                {SUGGESTED_PROMPTS.map((prompt, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleSuggestedPrompt(prompt)}
+                    className="text-left text-sm text-primary hover:underline disabled:opacity-50 p-2 rounded-md hover:bg-muted/50 transition-colors"
+                    disabled={isLoading}
+                  >
+                    &ldquo;{prompt}&rdquo;
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="text-xs text-muted-foreground max-w-md">
+              <p className="font-medium mb-1">Powered by:</p>
+              <p>Multi-provider LLM routing with tool integrations for search, price analysis, and mortgage calculations.</p>
+            </div>
+          </div>
+        )}
+
+        {/* STATE 2: Loading state (streaming) - thinking indicator */}
+        {isLoading && (
+          <div
+            className="flex w-full items-start gap-4 p-4 rounded-lg bg-background border"
+            role="status"
+            aria-live="polite"
+            aria-label="Assistant is thinking"
+          >
+            <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow bg-primary text-primary-foreground">
+              <Bot className="h-4 w-4" />
+            </div>
+            <div className="flex-1 flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Thinking...</span>
+            </div>
+          </div>
+        )}
+
+        {/* STATE 3 & 4: Message list (Populated state + inline errors) */}
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={cn(
+              "flex w-full items-start gap-4 p-4 rounded-lg",
+              message.role === "user"
+                ? "bg-muted/50"
+                : message.isError
+                  ? "bg-destructive/10 border border-destructive/20"
+                  : "bg-background border"
+            )}
+            role={message.role === "assistant" && message.isError ? "alert" : undefined}
+            aria-live={message.isError ? "assertive" : "polite"}
+          >
+            <div className={cn(
+              "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow",
+              message.role === "user" ? "bg-background" : "bg-primary text-primary-foreground"
+            )}>
+              {message.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+            </div>
+            <div className="flex-1 space-y-2 overflow-hidden">
+              <div className="prose break-words dark:prose-invert text-sm leading-relaxed">
+                {!message.content ? (
+                  <span className="text-muted-foreground italic">Thinking...</span>
+                ) : (
+                  message.content
+                )}
+              </div>
+
+              {/* Sources display */}
+              {message.role === "assistant" && message.sources && message.sources.length > 0 && (
+                <details className="rounded-md border bg-muted/30 px-3 py-2 text-xs">
+                  <summary className="cursor-pointer select-none font-medium">
+                    Sources ({message.sources.length}){message.sourcesTruncated ? " (truncated)" : ""}
+                  </summary>
+                  <ol className="mt-2 list-decimal pl-4 space-y-2">
+                    {message.sources.map((source, i) => {
+                      const metadata = source.metadata || {};
+                      const title = extractSourceTitle(metadata) || `Source ${i + 1}`;
+                      const metaInline = formatMetadataInline(metadata);
+                      const content = truncateText(source.content || "", 400);
+                      return (
+                        <li key={`${i}`} className="space-y-1">
+                          <div className="text-[12px] font-medium break-words">{title}</div>
+                          {metaInline ? (
+                            <div className="font-mono text-[11px] text-muted-foreground break-all">{metaInline}</div>
+                          ) : null}
+                          {content ? <div className="text-[12px] leading-snug break-words">{content}</div> : null}
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </details>
+              )}
+
+              {/* Intermediate steps (debug mode) */}
+              {debugMode && message.role === "assistant" && message.intermediateSteps && message.intermediateSteps.length > 0 && (
+                <details className="rounded-md border bg-muted/30 px-3 py-2 text-xs">
+                  <summary className="cursor-pointer select-none font-medium">
+                    Debug trace ({message.intermediateSteps.length})
+                  </summary>
+                  <pre className="mt-2 whitespace-pre-wrap break-words font-mono text-[11px] leading-snug">
+                    {JSON.stringify(message.intermediateSteps, null, 2)}
+                  </pre>
+                </details>
+              )}
+
+              {/* Error retry button */}
+              {message.isError && (
+                <div className="flex items-center gap-3">
+                  {message.requestId && (
+                    <div className="text-xs text-muted-foreground font-mono">
+                      request_id={message.requestId}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleRetry}
+                    disabled={isLoading}
+                    className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                    Retry
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input Form */}
+      <form ref={formRef} onSubmit={handleSubmit} className="flex gap-4">
+        <input
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          placeholder={
+            hasStarted
+              ? "Ask about properties, market trends, or investment advice..."
+              : "Type your question here to get started..."
+          }
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={isLoading}
+          aria-label="Chat message input"
+        />
+        <button
+          type="submit"
+          aria-label={isLoading ? "Sending..." : "Send message"}
+          disabled={isLoading || !input.trim()}
+          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 w-12"
+        >
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+        </button>
+      </form>
+    </div>
+  );
+}

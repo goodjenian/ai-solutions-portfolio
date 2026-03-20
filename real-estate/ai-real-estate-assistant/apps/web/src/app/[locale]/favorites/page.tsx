@@ -1,0 +1,201 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { FolderPlus, Heart, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+
+import { useFavorites } from '@/contexts/FavoritesContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { PropertyCard } from '@/components/property';
+import { Button } from '@/components/ui/button';
+
+export default function FavoritesPage() {
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const {
+    favorites,
+    collections,
+    isLoading,
+    error,
+    loadFavoritesWithProperties,
+    refreshCollections,
+    addCollection,
+  } = useFavorites();
+
+  const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
+  const [showNewCollectionModal, setShowNewCollectionModal] = useState(false);
+  const [newCollectionName, setNewCollectionName] = useState('');
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadFavoritesWithProperties(selectedCollection || undefined);
+      refreshCollections();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, selectedCollection]);
+
+  // Auth loading state
+  if (authLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // Not authenticated state
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+          <Heart className="h-16 w-16 text-muted-foreground mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Sign in to view your favorites</h1>
+          <p className="text-muted-foreground mb-6">
+            Save properties you love and access them from any device.
+          </p>
+          <Link href="/login">
+            <Button>Sign In</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const handleCreateCollection = async () => {
+    if (!newCollectionName.trim()) return;
+
+    try {
+      await addCollection(newCollectionName.trim());
+      setNewCollectionName('');
+      setShowNewCollectionModal(false);
+    } catch (err) {
+      console.error('Failed to create collection:', err);
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col space-y-8">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">My Favorites</h1>
+            <p className="text-muted-foreground">
+              {favorites.length} saved {favorites.length === 1 ? 'property' : 'properties'}
+            </p>
+          </div>
+          <Button variant="outline" onClick={() => setShowNewCollectionModal(true)}>
+            <FolderPlus className="h-4 w-4 mr-2" />
+            New Collection
+          </Button>
+        </div>
+
+        {/* Error state */}
+        {error && (
+          <div className="flex items-center gap-2 p-4 rounded-lg bg-destructive/10 text-destructive">
+            <p>{error}</p>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {/* Collections Sidebar */}
+          <div className="space-y-4">
+            <div className="rounded-lg border bg-card p-4">
+              <h2 className="font-semibold mb-4">Collections</h2>
+              <div className="space-y-2">
+                <button
+                  onClick={() => setSelectedCollection(null)}
+                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                    selectedCollection === null
+                      ? 'bg-primary text-primary-foreground'
+                      : 'hover:bg-muted'
+                  }`}
+                >
+                  All Favorites ({favorites.length})
+                </button>
+
+                {collections.map((collection) => (
+                  <button
+                    key={collection.id}
+                    onClick={() => setSelectedCollection(collection.id)}
+                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                      selectedCollection === collection.id
+                        ? 'bg-primary text-primary-foreground'
+                        : 'hover:bg-muted'
+                    }`}
+                  >
+                    {collection.name} ({collection.favorite_count})
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Favorites Grid */}
+          <div className="md:col-span-3">
+            {isLoading ? (
+              <div className="flex items-center justify-center min-h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : favorites.length === 0 ? (
+              <div className="flex flex-col items-center justify-center min-h-[300px] text-center border rounded-lg border-dashed">
+                <Heart className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold">No favorites yet</h3>
+                <p className="text-sm text-muted-foreground mt-2 max-w-sm">
+                  Click the heart icon on any property to save it here.
+                </p>
+                <Link href="/search">
+                  <Button variant="outline" className="mt-4">
+                    Browse Properties
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {favorites.map((favorite) => (
+                  <div key={favorite.id} className="relative">
+                    {favorite.property ? (
+                      <PropertyCard property={favorite.property} />
+                    ) : (
+                      <div className="rounded-lg border bg-card p-6 text-center">
+                        <p className="text-muted-foreground">Property no longer available</p>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          ID: {favorite.property_id}
+                        </p>
+                      </div>
+                    )}
+                    {favorite.notes && (
+                      <div className="mt-2 p-2 bg-muted rounded text-sm">{favorite.notes}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* New Collection Modal */}
+      {showNewCollectionModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-background rounded-lg p-6 max-w-md w-full mx-4 shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">New Collection</h2>
+            <input
+              type="text"
+              value={newCollectionName}
+              onChange={(e) => setNewCollectionName(e.target.value)}
+              placeholder="Collection name"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm mb-4"
+              autoFocus
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowNewCollectionModal(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleCreateCollection}>Create</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

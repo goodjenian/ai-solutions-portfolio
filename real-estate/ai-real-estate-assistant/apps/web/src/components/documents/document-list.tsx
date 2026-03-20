@@ -1,0 +1,337 @@
+'use client';
+
+import { useState } from 'react';
+import {
+  FileText,
+  Download,
+  Trash2,
+  Calendar,
+  Tag,
+  Building,
+  AlertTriangle,
+  MoreVertical,
+  FileImage,
+  File,
+  Clock,
+  Search,
+} from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import type { Document as DocumentType, DocumentCategory } from '@/lib/types';
+import { deleteDocument, updateDocument, getDocumentDownloadUrl } from '@/lib/api';
+
+interface DocumentListProps {
+  documents: DocumentType[];
+  onDocumentDeleted?: (documentId: string) => void;
+  onDocumentUpdated?: (document: DocumentType) => void;
+}
+
+const CATEGORY_LABELS: Record<DocumentCategory, string> = {
+  contract: 'Contract',
+  inspection: 'Inspection Report',
+  photo: 'Photo',
+  financial: 'Financial Document',
+  other: 'Other',
+};
+
+const FILE_TYPE_ICONS: Record<string, React.ReactNode> = {
+  'application/pdf': <FileText className="h-8 w-8 text-red-500" />,
+  'application/msword': <File className="h-8 w-8 text-blue-500" />,
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': (
+    <File className="h-8 w-8 text-blue-500" />
+  ),
+  'image/jpeg': <FileImage className="h-8 w-8 text-green-500" />,
+  'image/jpg': <FileImage className="h-8 w-8 text-green-500" />,
+  'image/png': <FileImage className="h-8 w-8 text-green-500" />,
+};
+
+function getFileIcon(fileType: string): React.ReactNode {
+  return FILE_TYPE_ICONS[fileType] || <File className="h-8 w-8 text-gray-500" />;
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+function isExpiringSoon(expiryDate?: string): boolean {
+  if (!expiryDate) return false;
+  const expiry = new Date(expiryDate);
+  const now = new Date();
+  const daysUntilExpiry = (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+  return daysUntilExpiry > 0 && daysUntilExpiry <= 30;
+}
+
+function isExpired(expiryDate?: string): boolean {
+  if (!expiryDate) return false;
+  return new Date(expiryDate) < new Date();
+}
+
+export function DocumentList({
+  documents,
+  onDocumentDeleted,
+  onDocumentUpdated,
+}: DocumentListProps) {
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [showMenu, setShowMenu] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<DocumentCategory | ''>('');
+  const [sortBy, setSortBy] = useState<'date' | 'name' | 'size'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  const handleDownload = async (doc: DocumentType) => {
+    try {
+      const url = getDocumentDownloadUrl(doc.id);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = doc.original_filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Download failed:', error);
+    }
+  };
+
+  const handleDelete = async (doc: DocumentType) => {
+    if (!confirm(`Delete "${doc.original_filename}"? This cannot be undone.`)) {
+      return;
+    }
+
+    setDeleting(doc.id);
+    try {
+      await deleteDocument(doc.id);
+      onDocumentDeleted?.(doc.id);
+    } catch (error) {
+      console.error('Delete failed:', error);
+      alert('Failed to delete document');
+    } finally {
+      setDeleting(null);
+      setShowMenu(null);
+    }
+  };
+
+  // Filter and sort documents
+  const filteredDocuments = documents
+    .filter((doc) => {
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = doc.original_filename.toLowerCase().includes(query);
+        const matchesDesc = doc.description?.toLowerCase().includes(query);
+        if (!matchesName && !matchesDesc) return false;
+      }
+      if (categoryFilter && doc.category !== categoryFilter) {
+        return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      let comparison = 0;
+      switch (sortBy) {
+        case 'date':
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          break;
+        case 'name':
+          comparison = a.original_filename.localeCompare(b.original_filename);
+          break;
+        case 'size':
+          comparison = a.file_size - b.file_size;
+          break;
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+  if (documents.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <FileText className="h-16 w-16 text-muted-foreground/30 mb-4" />
+        <h3 className="text-lg font-medium text-muted-foreground">No documents yet</h3>
+        <p className="text-sm text-muted-foreground/70 mt-1">
+          Upload your first document to get started
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3 items-center">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search documents..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background text-sm"
+          />
+        </div>
+
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value as DocumentCategory | '')}
+          className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+        >
+          <option value="">All Categories</option>
+          {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as 'date' | 'name' | 'size')}
+          className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+        >
+          <option value="date">Sort by Date</option>
+          <option value="name">Sort by Name</option>
+          <option value="size">Sort by Size</option>
+        </select>
+
+        <button
+          onClick={() => setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+          className="px-3 py-2 rounded-md border border-input bg-background text-sm hover:bg-muted"
+        >
+          {sortOrder === 'asc' ? '↑ Ascending' : '↓ Descending'}
+        </button>
+      </div>
+
+      {/* Document Grid */}
+      {filteredDocuments.length === 0 ? (
+        <div className="text-center py-8 text-muted-foreground">
+          <p>No documents match your filters</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredDocuments.map((doc) => {
+            const expired = isExpired(doc.expiry_date);
+            const expiringSoon = isExpiringSoon(doc.expiry_date);
+
+            return (
+              <div
+                key={doc.id}
+                className={`relative rounded-lg border bg-card p-4 transition-shadow hover:shadow-md ${
+                  expired ? 'border-red-300 bg-red-50/50' : ''
+                }`}
+              >
+                {/* Expiry Badge */}
+                {(expired || expiringSoon) && (
+                  <div
+                    className={`absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                      expired ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                    }`}
+                  >
+                    <AlertTriangle className="h-3 w-3" />
+                    {expired ? 'Expired' : 'Expiring Soon'}
+                  </div>
+                )}
+
+                {/* File Icon & Name */}
+                <div className="flex items-start gap-3 mb-3">
+                  {getFileIcon(doc.file_type)}
+                  <div className="flex-1 min-w-0 pr-8">
+                    <p className="font-medium truncate" title={doc.original_filename}>
+                      {doc.original_filename}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{formatFileSize(doc.file_size)}</p>
+                  </div>
+                </div>
+
+                {/* Metadata */}
+                <div className="space-y-2 text-sm text-muted-foreground mb-3">
+                  {doc.category && (
+                    <div className="flex items-center gap-2">
+                      <Tag className="h-4 w-4" />
+                      <span>{CATEGORY_LABELS[doc.category]}</span>
+                    </div>
+                  )}
+
+                  {doc.property_id && (
+                    <div className="flex items-center gap-2">
+                      <Building className="h-4 w-4" />
+                      <span className="truncate">Property: {doc.property_id}</span>
+                    </div>
+                  )}
+
+                  {doc.expiry_date && (
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      <span>Expires: {new Date(doc.expiry_date).toLocaleDateString()}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <span>
+                      Added {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                {doc.tags && doc.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {doc.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Description */}
+                {doc.description && (
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                    {doc.description}
+                  </p>
+                )}
+
+                {/* Actions */}
+                <div className="flex items-center justify-between pt-2 border-t">
+                  <button
+                    onClick={() => handleDownload(doc)}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-md hover:bg-muted transition-colors"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download
+                  </button>
+
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowMenu(showMenu === doc.id ? null : doc.id)}
+                      className="p-1.5 rounded-md hover:bg-muted"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </button>
+
+                    {showMenu === doc.id && (
+                      <>
+                        <div className="fixed inset-0 z-10" onClick={() => setShowMenu(null)} />
+                        <div className="absolute right-0 bottom-full mb-1 z-20 w-40 rounded-md border bg-popover shadow-lg">
+                          <button
+                            onClick={() => handleDelete(doc)}
+                            disabled={deleting === doc.id}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md disabled:opacity-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            {deleting === doc.id ? 'Deleting...' : 'Delete'}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
