@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Any, Optional, Type
 from pydantic.v1 import BaseModel, Field
 from crewai_tools import RagTool
@@ -6,7 +7,6 @@ from sec_api import QueryApi  # Make sure to have sec_api installed
 from embedchain.models.data_type import DataType
 import requests
 import html2text
-import re
 
 class FixedSEC10KToolSchema(BaseModel):
     """Input for SEC10KTool."""
@@ -61,8 +61,16 @@ class SEC10KTool(RagTool):
 
             url = filings[0]['linkToFilingDetails']
             
+            # SEC EDGAR requires a valid User-Agent with your app name and contact email
+            # Set SEC_API_USER_AGENT in your .env file (e.g. "MyApp myemail@example.com")
+            user_agent = os.environ.get("SEC_API_USER_AGENT", "")
+            if not user_agent or "@" not in user_agent:
+                raise EnvironmentError(
+                    "SEC_API_USER_AGENT must be set in .env (e.g. 'MyApp contact@example.com'). "
+                    "SEC EDGAR requires a valid contact email in the User-Agent header."
+                )
             headers = {
-                "User-Agent": "crewai.com bisan@crewai.com",
+                "User-Agent": user_agent,
                 "Accept-Encoding": "gzip, deflate",
                 "Host": "www.sec.gov"
             }
@@ -140,8 +148,16 @@ class SEC10QTool(RagTool):
 
             url = filings[0]['linkToFilingDetails']
             
+            # SEC EDGAR requires a valid User-Agent with your app name and contact email
+            # Set SEC_API_USER_AGENT in your .env file (e.g. "MyApp myemail@example.com")
+            user_agent = os.environ.get("SEC_API_USER_AGENT", "")
+            if not user_agent or "@" not in user_agent:
+                raise EnvironmentError(
+                    "SEC_API_USER_AGENT must be set in .env (e.g. 'MyApp contact@example.com'). "
+                    "SEC EDGAR requires a valid contact email in the User-Agent header."
+                )
             headers = {
-                "User-Agent": "crewai.com bisan@crewai.com",
+                "User-Agent": user_agent,
                 "Accept-Encoding": "gzip, deflate",
                 "Host": "www.sec.gov"
             }

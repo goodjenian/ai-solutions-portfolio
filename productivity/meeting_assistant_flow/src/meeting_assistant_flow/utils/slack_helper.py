@@ -12,6 +12,11 @@ def send_message_to_channel(text: str):
     # Get your Slack token and channel ID from the environment variables
     SLACK_TOKEN = os.getenv("SLACK_TOKEN")
     SLACK_CHANNEL_ID = os.getenv("SLACK_CHANNEL_ID")
+    if not SLACK_TOKEN or not SLACK_CHANNEL_ID:
+        raise EnvironmentError(
+            "SLACK_TOKEN and SLACK_CHANNEL_ID must be set in your .env file. "
+            "See .env.example for reference."
+        )
     client = WebClient(token=SLACK_TOKEN)
 
     try:

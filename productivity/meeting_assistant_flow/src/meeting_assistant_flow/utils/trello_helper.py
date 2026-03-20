@@ -17,6 +17,13 @@ TOKEN = os.getenv("TRELLO_TOKEN")
 BOARD_ID = os.getenv("TRELLO_BOARD_ID")
 LIST_ID = os.getenv("TRELLO_LIST_ID")
 
+_missing = [v for v, k in [("TRELLO_API_KEY", API_KEY), ("TRELLO_TOKEN", TOKEN), ("TRELLO_LIST_ID", LIST_ID)] if not k]
+if _missing:
+    raise EnvironmentError(
+        f"Missing required Trello env vars: {', '.join(_missing)}. "
+        "See .env.example for reference."
+    )
+
 
 def create_trello_card(task_title, task_description):
     """

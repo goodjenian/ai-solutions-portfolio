@@ -27,7 +27,8 @@ def check_email(checked_emails_ids: set[str]) -> tuple[list[Email], set[str]]:
                 {
                     "id": email["id"],
                     "threadId": email["threadId"],
-                    "snippet": email["snippet"],
+                    # Truncate snippet to 500 chars to limit data sent to LLM APIs
+                    "snippet": email["snippet"][:500] if email.get("snippet") else "",
                     "sender": email["sender"],
                 }
             )

@@ -1,3 +1,4 @@
+import os
 import tempfile
 import time
 from typing import List, Union
@@ -185,8 +186,14 @@ class PlaywrightManager:
                     no_viewport=True,
                 )
             else:
+                cdp_url = os.environ.get("CDP_ENDPOINT_URL", "http://localhost:9222")
+                if not cdp_url.startswith("http://localhost") and not cdp_url.startswith("http://127.0.0.1"):
+                    raise ValueError(
+                        f"CDP_ENDPOINT_URL must bind to localhost for security. Got: {cdp_url}\n"
+                        "Do not expose the CDP port to external interfaces."
+                    )
                 browser = await PlaywrightManager._playwright.chromium.connect_over_cdp(
-                    "http://localhost:9222"
+                    cdp_url
                 )
                 PlaywrightManager._browser_context = browser.contexts[0]
 

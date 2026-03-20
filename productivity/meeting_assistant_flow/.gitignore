@@ -1,3 +1,5 @@
 .env
 __pycache__/
 new_tasks.csv
+# Meeting notes may contain sensitive/confidential content — never commit real notes
+meeting_notes.txt
