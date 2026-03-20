@@ -11,7 +11,7 @@ from meeting_assistant_flow.crews.meeting_assistant_crew.meeting_assistant_crew 
 )
 from meeting_assistant_flow.types import MeetingTask
 from meeting_assistant_flow.utils.slack_helper import send_message_to_channel
-from meeting_assistant_flow.utils.trello_helper import save_tasks_to_trello
+from meeting_assistant_flow.utils.clickup_helper import save_tasks_to_clickup
 
 
 class MeetingState(BaseModel):
@@ -45,12 +45,12 @@ class MeetingFlow(Flow[MeetingState]):
         self.state.tasks = tasks
 
     @listen(generate_tasks_from_meeting_transcript)
-    def add_tasks_to_trello(self):
-        print("Adding Tasks to Trello")
+    def add_tasks_to_clickup(self):
+        print("Adding Tasks to ClickUp")
         try:
-            save_tasks_to_trello(self.state.tasks)
+            save_tasks_to_clickup(self.state.tasks)
         except EnvironmentError as e:
-            print(f"Skipping Trello (not configured): {e}")
+            print(f"Skipping ClickUp (not configured): {e}")
 
     @listen(generate_tasks_from_meeting_transcript)
     def save_new_tasks_to_csv(self):
