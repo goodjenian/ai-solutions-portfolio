@@ -2,14 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# System deps
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential curl \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install shared security package first (its deps: fastapi, pydantic, python-dotenv)
 COPY _shared/ ./_shared/
-RUN pip install --no-cache-dir -e ./_shared/ "uvicorn[standard]>=0.29"
+RUN pip install --no-cache-dir -e ./_shared/ "uvicorn[standard]>=0.29" "langchain-openai>=0.1"
 
 # Install service
 COPY marketing/marketing_strategy/ ./marketing/marketing_strategy/

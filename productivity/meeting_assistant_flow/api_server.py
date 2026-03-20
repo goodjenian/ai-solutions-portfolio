@@ -69,9 +69,9 @@ async def process_meeting(
         notes_path = Path(__file__).parent / "meeting_notes_runtime.txt"
         notes_path.write_text(payload.meeting_notes, encoding="utf-8")
 
-        from src.meeting_assistant_flow.main import MeetingAssistantFlow  # type: ignore[import]
+        from src.meeting_assistant_flow.main import MeetingFlow  # type: ignore[import]
 
-        flow = MeetingAssistantFlow()
+        flow = MeetingFlow()
         flow.kickoff()
         duration = time.perf_counter() - start
 
