@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install shared security package
+COPY _shared/ ./_shared/
+RUN pip install --no-cache-dir -e ./_shared/ "uvicorn[standard]>=0.29"
+
+# Install service
+COPY productivity/email_auto_responder_flow/ ./productivity/email_auto_responder_flow/
+WORKDIR /app/productivity/email_auto_responder_flow
+RUN pip install --no-cache-dir -e .
+
+# Gmail OAuth tokens are mounted at runtime — see DEPLOY.md
+# VOLUME ["/app/productivity/email_auto_responder_flow/credentials.json"]
+# VOLUME ["/app/productivity/email_auto_responder_flow/token.json"]
+
+EXPOSE 8003
+CMD ["uvicorn", "api_server:app", "--host", "0.0.0.0", "--port", "8003"]

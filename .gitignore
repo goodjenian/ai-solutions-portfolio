@@ -10,5 +10,8 @@ node_modules/
 venv/
 *.sqlite3
 credentials.json
+token.json
 *.key
 *.pem
+secrets/
+_shared/goodyseo_security/audit/

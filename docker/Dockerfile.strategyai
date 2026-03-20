@@ -1,0 +1,20 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install shared security package first (its deps: fastapi, pydantic, python-dotenv)
+COPY _shared/ ./_shared/
+RUN pip install --no-cache-dir -e ./_shared/ "uvicorn[standard]>=0.29"
+
+# Install service
+COPY marketing/marketing_strategy/ ./marketing/marketing_strategy/
+WORKDIR /app/marketing/marketing_strategy
+RUN pip install --no-cache-dir -e .
+
+EXPOSE 8001
+CMD ["uvicorn", "api_server:app", "--host", "0.0.0.0", "--port", "8001"]

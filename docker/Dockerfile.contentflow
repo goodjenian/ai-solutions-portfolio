@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# System deps required by opencv and unstructured
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl \
+    libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install shared security package
+COPY _shared/ ./_shared/
+RUN pip install --no-cache-dir -e ./_shared/ "uvicorn[standard]>=0.29"
+
+# Install service
+COPY marketing/instagram_post/ ./marketing/instagram_post/
+WORKDIR /app/marketing/instagram_post
+RUN pip install --no-cache-dir -e .
+
+EXPOSE 8002
+CMD ["uvicorn", "api_server:app", "--host", "0.0.0.0", "--port", "8002"]
