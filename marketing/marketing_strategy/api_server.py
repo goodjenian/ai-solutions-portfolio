@@ -70,8 +70,8 @@ async def run_strategy(
 
         crew = MarketingPostsCrew()
         inputs = {
-            "product_website": payload.product_website,
-            "product_details": payload.extra_details,
+            "customer_domain": payload.product_website,
+            "project_description": payload.extra_details,
         }
         result = crew.crew().kickoff(inputs=inputs)
         ad_copy = str(result)
